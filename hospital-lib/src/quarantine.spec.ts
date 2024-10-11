@@ -222,7 +222,6 @@ export class QuarantineTest {
 
   //! ********** TESTS WITH THREE DRUGS **********
 
-
   @Test()
   /**
    * @method antibioticAspirinAndInsulin
