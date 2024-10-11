@@ -8,6 +8,8 @@ import { deadRules, treatmentRules } from './rules';
  */
 export class Quarantine {
 
+  //! ********** PROPERTIES **********
+
   /**
    * @property {PatientsRegister} patients
    * @description - The patient states register
@@ -26,6 +28,8 @@ export class Quarantine {
    */
   private drugs: string[];
 
+  //! ********** CONSTRUCTOR **********
+
   /**
    * @constructor
    * @description - Create a new Quarantine with the given patients register
@@ -36,6 +40,42 @@ export class Quarantine {
     this.newPatients = Object.keys(patients).reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
     this.drugs       = [];
   }
+
+  //! ********** PRIVATE METHODS **********
+
+  /**
+   * @private
+   * @method checkDeadRules
+   * @description - Check if the given dead rule should be applied
+   * @param {Object} rule - The dead rule to check
+   * @param {function} rule.condition - The condition under which the rule should be applied
+   * @param {function} rule.action - The action that should be taken if the condition is true
+   * @returns {boolean} true if the rule has been applied, false otherwise
+   */
+  private checkDeadRules(rule: {condition: (drugs: string[]) => boolean; action: (patients: PatientsRegister, newPatients: PatientsRegister) => void}): boolean {
+
+    if (rule.condition(this.drugs)) {
+      rule.action(this.patients, this.newPatients);
+
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * @private
+   * @method applyTreatmentRules
+   * @description - Apply the treatment rules to the patients
+   */
+  private applyTreatmentRules() {
+    for (const rule of treatmentRules) {
+
+      if (rule.condition(this.drugs)) rule.valid(this.patients, this.newPatients);
+      else rule.invalid(this.patients, this.newPatients);
+    }
+  }
+
+  //! ********** PUBLIC METHODS **********
 
   /**
    * @method setDrugs
@@ -53,19 +93,9 @@ export class Quarantine {
   public wait40Days(): void {
     let patientsAreDead = false;
 
-    for (const rule of deadRules) {
-      if (rule.condition(this.drugs)) {
-        rule.action(this.patients, this.newPatients);
-        patientsAreDead = true;
-      }
-    };
-
-    if (!patientsAreDead) {
-      for (const rule of treatmentRules) {
-        if (rule.condition(this.drugs)) rule.valid(this.patients, this.newPatients);
-        else rule.invalid(this.patients, this.newPatients);
-      };
-    }
+    // TODO: Test with mutiple deadRules like one true, then one false
+    for (const rule of deadRules) patientsAreDead = this.checkDeadRules(rule);
+    if (!patientsAreDead) this.applyTreatmentRules();
 
     this.patients = this.newPatients;
   }
@@ -76,6 +106,7 @@ export class Quarantine {
    * @returns {PatientsRegister} - The current state of the patients
    */
   public report(): PatientsRegister {
+
     return this.patients;
   }
 }
