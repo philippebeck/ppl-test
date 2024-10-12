@@ -3,8 +3,9 @@ import { PatientsRegister } from './patientsRegister';
 /**
  * @function
  * @name deadRules
- * @description - Dead rules
  * @type {Array<{condition: (drugs: string[]) => boolean; action: (patients: PatientsRegister, newPatients: PatientsRegister) => void }>}
+ * @description - Dead rules
+ *  - If the patients have Aspirin & Paracetamol, they will die
  */
 export const deadRules: Array<{ condition: (drugs: string[]) => boolean; action: (patients: PatientsRegister, newPatients: PatientsRegister) => void }> = [
   {
@@ -16,8 +17,12 @@ export const deadRules: Array<{ condition: (drugs: string[]) => boolean; action:
 /**
  * @function
  * @name treatmentRules
- * @description - Treatment rules
  * @type {Array<{condition: (drugs: string[]) => boolean; valid: (patients: PatientsRegister, newPatients: PatientsRegister) => void; invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => void }>}
+ * @description - Treatment rules
+ *  - If healthy patients have Antibiotic & Insulin, they will have a fever
+ *  - If feverish patients have Aspirin or Paracetamol, the fever will be cured
+ *  - If tuberculosis patients have Antibiotic, the tuberculosis will be cured
+ *  - If diabetic patients have not Insulin, they will die
  */
 export const treatmentRules: Array<{ condition: (drugs: string[]) => boolean; valid: (patients: PatientsRegister, newPatients: PatientsRegister) => void; invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => void }> = [
   {
