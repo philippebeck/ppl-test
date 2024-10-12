@@ -1,48 +1,69 @@
-import { PatientsRegister } from './patientsRegister';
+import { PatientsRegister as PR } from './patientsRegister';
 
 /**
  * @function
  * @name deadRules
- * @type {Array<{condition: (drugs: string[]) => boolean; action: (patients: PatientsRegister, newPatients: PatientsRegister) => void }>}
+ * @type {Array<{
+ *  condition: (drugs: string[]) => boolean;
+ *  action: (patients: PR, newPatients: PR) => void
+ * }>}
  * @description - Dead rules
  *  - If the patients have Aspirin & Paracetamol, they will die
+ * * (additional test to check the logic flexibility)
+ * * - If the patients have Aspirin & Ibuprofen, they will die
  */
-export const deadRules: Array<{ condition: (drugs: string[]) => boolean; action: (patients: PatientsRegister, newPatients: PatientsRegister) => void }> = [
+export const deadRules: Array<{
+  condition: (drugs: string[]) => boolean;
+  action: (patients: PR, newPatients: PR) => void
+}> = [
   {
     condition: (drugs: string[]) => drugs.includes('As') && drugs.includes('P'),
-    action: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.X += patients.F + patients.H + patients.D + patients.T
+    action: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T
+  },
+  {
+    condition: (drugs: string[]) => drugs.includes('As') && drugs.includes('Ib'), // Ibuprofen added here
+    action: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T
   }
 ];
 
 /**
  * @function
  * @name treatmentRules
- * @type {Array<{condition: (drugs: string[]) => boolean; valid: (patients: PatientsRegister, newPatients: PatientsRegister) => void; invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => void }>}
+ * @type {Array<{
+ *  condition: (drugs: string[]) => boolean;
+ *  valid: (patients: PR, newPatients: PR) => void;
+ *  invalid: (patients: PR, newPatients: PR) => void
+ * }>}
  * @description - Treatment rules
  *  - If healthy patients have Antibiotic & Insulin, they will have a fever
- *  - If feverish patients have Aspirin or Paracetamol, the fever will be cured
+ * * (modified test to check the logic flexibility)
+ * * - If feverish patients have Aspirin or Paracetamol or Ibuprofen, the fever will be cured 
  *  - If tuberculosis patients have Antibiotic, the tuberculosis will be cured
  *  - If diabetic patients have not Insulin, they will die
  */
-export const treatmentRules: Array<{ condition: (drugs: string[]) => boolean; valid: (patients: PatientsRegister, newPatients: PatientsRegister) => void; invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => void }> = [
+export const treatmentRules: Array<{
+  condition: (drugs: string[]) => boolean;
+  valid: (patients: PR, newPatients: PR) => void;
+  invalid: (patients: PR, newPatients: PR) => void
+}> = [
   {
     condition: (drugs: string[]) => drugs.includes('An') && drugs.includes('I'),
-    valid: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.F += patients.H,
-    invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.H += patients.H
+    valid: (patients: PR, newPatients: PR) => newPatients.F += patients.H,
+    invalid: (patients: PR, newPatients: PR) => newPatients.H += patients.H
   },
   {
-    condition: (drugs: string[]) => drugs.includes('As') || drugs.includes('P'),
-    valid: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.H += patients.F,
-    invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.F += patients.F
+    condition: (drugs: string[]) => drugs.includes('As') || drugs.includes('P') || drugs.includes('Ib'), // Ibuprofen added here
+    valid: (patients: PR, newPatients: PR) => newPatients.H += patients.F,
+    invalid: (patients: PR, newPatients: PR) => newPatients.F += patients.F
   },
   {
     condition: (drugs: string[]) => drugs.includes('An'),
-    valid: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.H += patients.T,
-    invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.T += patients.T
+    valid: (patients: PR, newPatients: PR) => newPatients.H += patients.T,
+    invalid: (patients: PR, newPatients: PR) => newPatients.T += patients.T
   },
   {
     condition: (drugs: string[]) => !drugs.includes('I'),
-    valid: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.X += patients.D,
-    invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => newPatients.D += patients.D
+    valid: (patients: PR, newPatients: PR) => newPatients.X += patients.D,
+    invalid: (patients: PR, newPatients: PR) => newPatients.D += patients.D
   }
 ];
