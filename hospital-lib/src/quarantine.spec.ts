@@ -55,9 +55,8 @@ export class QuarantineTest {
   @Test()
   /**
    * @method noTreatment
-   * @description - Simulate what happens if no treatment is given to the patients
-   *  The rules are as follows:
-   *  - If diabetics patient does not have insulin, he will die
+   * @description - Simulate what happens if no treatment is given to the patients:
+   *  - If a diabetic patient does not have insulin, he will die
    */
   public noTreatment(): void {
     this.quarantine.wait40Days();
@@ -70,10 +69,9 @@ export class QuarantineTest {
   @Test()
   /**
    * @method antibiotic
-   * @description - Simulate what happens if an antibiotics is given to the patients
-   *  The rules are as follows:
-   *  - If a tuberculosis patient has antibiotics, the tuberculosis will be cured
-   *  - If a diabetic patient has only antibiotics, he will die
+   * @description - Simulate what happens if an antibiotics is given to the patients:
+   *  - For a tuberculosis patient, the tuberculosis will be cured
+   *  - For a diabetic patient, he will die
    */
   public antibiotic(): void {
     this.quarantine.setDrugs(['An']);
@@ -85,10 +83,9 @@ export class QuarantineTest {
   @Test()
   /**
    * @method aspirin
-   * @description - Simulate what happens if aspirin is given to the patients
-   *  The rules are as follows:
-   *  - If a feverish patient has aspirin, the fever will be cured
-   *  - If a diabetic patient has only aspirin, he will die
+   * @description - Simulate what happens if aspirin is given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  - For a diabetic patient, he will die
    */
   public aspirin(): void {
     this.quarantine.setDrugs(['As']);
@@ -100,9 +97,8 @@ export class QuarantineTest {
   @Test()
   /**
    * @method insulin
-   * @description - Simulate what happens if an insulin is given to the patients
-   *  The rules are as follows:
-   *  - If a diabetic patient has insulin, he will not die
+   * @description - Simulate what happens if an insulin is given to the patients:
+   *  - For a diabetic patient, he will not die
    */
   public insulin(): void {
     this.quarantine.setDrugs(['I']);
@@ -114,10 +110,9 @@ export class QuarantineTest {
   @Test()
   /**
    * @method paracetamol
-   * @description - Simulate what happens if paracetamol is given to the patients
-   *  The rules are as follows:
-   *  - If a feverish patient has paracetamol, the fever will be cured
-   *  - If a diabetic patient has only paracetamol, he will die
+   * @description - Simulate what happens if paracetamol is given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  - For a diabetic patient, he will die
    */
   public paracetamol(): void {
     this.quarantine.setDrugs(['P']);
@@ -131,11 +126,10 @@ export class QuarantineTest {
   @Test()
   /**
    * @method antibioticAndAspirin
-   * @description - Simulate what happens if antibiotics & aspirin are given to the patients
-   *  The rules are as follows:
-   *  - If a feverish patient has antibiotics & aspirin, the fever will be cured
-   *  - If a diabetic patient has only antibiotics & aspirin, he will die
-   *  - If a tuberculosis patient has antibiotics & aspirin, the tuberculosis will be cured
+   * @description - Simulate what happens if antibiotics & aspirin are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  - For a diabetic patient, he will die
+   *  - For a tuberculosis patient, the tuberculosis will be cured
    */
   public antibioticAndAspirin(): void {
     this.quarantine.setDrugs(['An', 'As']);
@@ -147,11 +141,10 @@ export class QuarantineTest {
   @Test()
   /**
    * @method antibioticAndInsulin
-   * @description - Simulate what happens if antibiotics & insulin are given to the patients
-   *  The rules are as follows:
-   *  - If a healthy patient has antibiotics & insulin, the patient will have a fever
-   *  - If a diabetic patient has antibiotics & insulin, he will not die
-   *  - If a tuberculosis patient has antibiotics & insulin, the tuberculosis will be cured
+   * @description - Simulate what happens if antibiotics & insulin are given to the patients:
+   *  - For a healthy patient, the patient will have a fever
+   *  - For a diabetic patient, he will not die
+   *  - For a tuberculosis patient, the tuberculosis will be cured
    */
   public antibioticAndInsulin(): void {
     this.quarantine.setDrugs(['An', 'I']);
@@ -163,11 +156,10 @@ export class QuarantineTest {
   @Test()
   /**
    * @method antibioticAndParacetamol
-   * @description - Simulate what happens if antibiotics & paracetamol are given to the patients
-   *  The rules are as follows:
-   *  - If a feverish patient has antibiotics & paracetamol, the fever will be cured
-   *  - If a diabetic patient has only antibiotics & paracetamol, he will die
-   *  - If a tuberculosis patient has antibiotics & paracetamol, the tuberculosis will be cured
+   * @description - Simulate what happens if antibiotics & paracetamol are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  - For a diabetic patient, he will die
+   *  - For a tuberculosis patient, the tuberculosis will be cured
    */
   public antibioticAndParacetamol(): void {
     this.quarantine.setDrugs(['An', 'P']);
@@ -179,10 +171,9 @@ export class QuarantineTest {
   @Test()
   /**
    * @method aspirinAndInsulin
-   * @description - Simulate what happens if aspirin & insulin are given to the patients
-   *  The rules are as follows:
-   *  - If a feverish patient has aspirin & insulin, the fever will be cured
-   *  - If a diabetic patient has aspirin & insulin, he will not die
+   * @description - Simulate what happens if aspirin & insulin are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  - For a diabetic patient, he will not die
    */
   public aspirinAndInsulin(): void {
     this.quarantine.setDrugs(['As', 'I']);
@@ -194,9 +185,8 @@ export class QuarantineTest {
   @Test()
   /**
    * @method aspirinAndParacetamol
-   * @description - Simulate what happens if aspirin & paracetamol are given to the patients
-   *  The rules are as follows:
-   *  - If any patient has aspirin & paracetamol, he will die
+   * @description - Simulate what happens if aspirin & paracetamol are given to the patients:
+   *  - For any patient, he will die
    */
   public aspirinAndParacetamol(): void {
     this.quarantine.setDrugs(['P', 'As']);
@@ -208,10 +198,9 @@ export class QuarantineTest {
   @Test()
   /**
    * @method insulinAndParacetamol
-   * @description - Simulate what happens if insulin & paracetamol are given to the patients
-   *  The rules are as follows:
-   *  - If a feverish patient has insulin & paracetamol, his fever will be cured
-   *  - If a diabetic patient has insulin & paracetamol, he will not die
+   * @description - Simulate what happens if insulin & paracetamol are given to the patients:
+   *  - For a feverish patient, his fever will be cured
+   *  - For a diabetic patient, he will not die
    */
   public insulinAndParacetamol(): void {
     this.quarantine.setDrugs(['P', 'I']);
@@ -225,11 +214,10 @@ export class QuarantineTest {
   @Test()
   /**
    * @method antibioticAspirinAndInsulin
-   * @description - Simulate what happens if antibiotic, aspirin & insulin are given to the patients
-   *  The rules are as follows:
-   *  - If a feverish patient has antibiotic, aspirin & insulin, the fever will be cured
-   *  - If a healthy patient has antibiotic, aspirin & insulin, he will have a fever
-   *  - If a diabetic patient has antibiotic, aspirin & insulin, he will not die
+   * @description - Simulate what happens if antibiotic, aspirin & insulin are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  - For a healthy patient, he will have a fever
+   *  - For a diabetic patient, he will not die
    */
   public antibioticAspirinAndInsulin(): void {
     this.quarantine.setDrugs(['An', 'As', 'I']);
@@ -241,9 +229,8 @@ export class QuarantineTest {
   @Test()
   /**
    * @method antibioticAspirinAndParacetamol
-   * @description - Simulate what happens if antibiotic, aspirin & paracetamol are given to the patients
-   *  The rules are as follows:
-   *  - If any patient has antibiotic, aspirin & paracetamol, he will die
+   * @description - Simulate what happens if antibiotic, aspirin & paracetamol are given to the patients:
+   *  - For any patient, he will die
    */
   public antibioticAspirinAndParacetamol(): void {
     this.quarantine.setDrugs(['An', 'As', 'P']);
@@ -255,11 +242,10 @@ export class QuarantineTest {
   @Test()
   /**
    * @method antibioticInsulinAndParacetamol
-   * @description - Simulate what happens if antibiotic, insulin & paracetamol are given to the patients
-   *  The rules are as follows:
-   *  - If a feverish patient has antibiotic, insulin & paracetamol, the fever will be cured
-   *  - If a healthy patient has antibiotic, insulin & paracetamol, he will have a fever
-   *  - If a diabetic patient has insulin & paracetamol, he will not die
+   * @description - Simulate what happens if antibiotic, insulin & paracetamol are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  - For a healthy patient, he will have a fever
+   *  - For a diabetic patient, he will not die
    */
   public antibioticInsulinAndParacetamol(): void {
     this.quarantine.setDrugs(['An', 'I', 'P']);
@@ -271,9 +257,8 @@ export class QuarantineTest {
   @Test()
   /**
    * @method aspirinInsulinAndParacetamol
-   * @description - Simulate what happens if aspirin, insulin & paracetamol are given to the patients
-   *  The rules are as follows:
-   *  - If any patient has aspirin, insulin & paracetamol, he will die
+   * @description - Simulate what happens if aspirin, insulin & paracetamol are given to the patients:
+   *  - For any patient, he will die
    */
   public aspirinInsulinAndParacetamol(): void {
     this.quarantine.setDrugs(['As', 'I', 'P']);
@@ -282,14 +267,13 @@ export class QuarantineTest {
     Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 7 });
   }
 
-  //! ********** TESTS WITH ALL DRUGS **********
+  //! ********** TESTS WITH FOUR DRUGS **********
 
   @Test()
   /**
    * @method antibioticAspirinInsulinAndParacetamol
-   * @description - Simulate what happens if antibiotic, aspirin, insulin & paracetamol are given to the patients
-   *  The rules are as follows:
-   *  - If any patient has antibiotic, aspirin, insulin & paracetamol, he will die
+   * @description - Simulate what happens if antibiotic, aspirin, insulin & paracetamol are given to the patients:
+   *  - For any patient, he will die
    */
   public antibioticAspirinInsulinAndParacetamol(): void {
     this.quarantine.setDrugs(['An', 'As', 'I', 'P']);
