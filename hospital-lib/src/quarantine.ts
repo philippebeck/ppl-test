@@ -52,7 +52,10 @@ export class Quarantine {
    * @param {function} rule.action - The action that should be taken if the condition is true
    * @returns {boolean} true if the rule has been applied, false otherwise
    */
-  private checkDeadRules(rule: {condition: (drugs: string[]) => boolean; action: (patients: PatientsRegister, newPatients: PatientsRegister) => void}): boolean {
+  private checkDeadRules(rule: {
+    condition: (drugs: string[]) => boolean;
+    action: (patients: PatientsRegister, newPatients: PatientsRegister) => void
+  }): boolean {
 
     if (rule.condition(this.drugs)) {
       rule.action(this.patients, this.newPatients);
