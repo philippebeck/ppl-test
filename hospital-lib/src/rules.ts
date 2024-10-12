@@ -1,8 +1,7 @@
 import { PatientsRegister as PR } from './patientsRegister';
 
 /**
- * @function
- * @name deadRules
+ * @constant deadRules
  * @type {Array<{
  *  condition: (drugs: string[]) => boolean;
  *  action: (patients: PR, newPatients: PR) => void
@@ -27,8 +26,7 @@ export const deadRules: Array<{
 ];
 
 /**
- * @function
- * @name treatmentRules
+ * @constant treatmentRules
  * @type {Array<{
  *  condition: (drugs: string[]) => boolean;
  *  valid: (patients: PR, newPatients: PR) => void;
