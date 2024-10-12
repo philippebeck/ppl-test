@@ -93,8 +93,7 @@ export class Quarantine {
   public wait40Days(): void {
     let patientsAreDead = false;
 
-    // TODO: Test with mutiple deadRules like one true, then one false
-    for (const rule of deadRules) patientsAreDead = this.checkDeadRules(rule);
+    for (const rule of deadRules) patientsAreDead = patientsAreDead || this.checkDeadRules(rule);
     if (!patientsAreDead) this.applyTreatmentRules();
 
     this.patients = this.newPatients;
