@@ -17,11 +17,11 @@ export const deadRules: Array<{
 }> = [
   {
     condition: (drugs: string[]) => drugs.includes('As') && drugs.includes('P'),
-    action: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T
+    action: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T + patients.P // Pain state added here
   },
   {
     condition: (drugs: string[]) => drugs.includes('As') && drugs.includes('Ib'), // Ibuprofen added here
-    action: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T
+    action: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T + patients.P // Pain state added here
   }
 ];
 
@@ -35,7 +35,8 @@ export const deadRules: Array<{
  * @description - Treatment rules
  *  - If healthy patients have Antibiotic & Insulin, they will have a fever
  * * (modified test to check the logic flexibility)
- * * - If feverish patients have Aspirin or Paracetamol or Ibuprofen, the fever will be cured 
+ * * - If feverish patients have Aspirin or Ibuprofen or Paracetamol, the fever will be cured
+ * * - If painful patients have Aspirin or Ibuprofen or Paracetamol, the pain will be cured
  *  - If tuberculosis patients have Antibiotic, the tuberculosis will be cured
  *  - If diabetic patients have not Insulin, they will die
  */
@@ -51,8 +52,8 @@ export const treatmentRules: Array<{
   },
   {
     condition: (drugs: string[]) => drugs.includes('As') || drugs.includes('P') || drugs.includes('Ib'), // Ibuprofen added here
-    valid: (patients: PR, newPatients: PR) => newPatients.H += patients.F,
-    invalid: (patients: PR, newPatients: PR) => newPatients.F += patients.F
+    valid: (patients: PR, newPatients: PR) => newPatients.H += patients.F + patients.P, // Pain state added here
+    invalid: (patients: PR, newPatients: PR) => { newPatients.F += patients.F; newPatients.P += patients.P } // Pain state added here
   },
   {
     condition: (drugs: string[]) => drugs.includes('An'),
