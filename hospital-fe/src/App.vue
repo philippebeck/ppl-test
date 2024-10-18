@@ -8,11 +8,11 @@ import Button from './components/atoms/Button.vue'
 import Patients from './components/molecules/Patients.vue'
 import Drugs from './components/molecules/Drugs.vue'
 
-let patientsLoaded = ref<boolean>(false)
-let drugsLoaded    = ref<boolean>(false)
+const patientsLoaded = ref<boolean>(false)
+const drugsLoaded    = ref<boolean>(false)
 
-let patients = ref<PatientsRegister | undefined>({})
-let drugs    = ref<string[] | undefined>([])
+const patients = ref<PatientsRegister | undefined>({})
+const drugs    = ref<string[] | undefined>([])
 
 const loadData = async (url: string) => {
   try {
