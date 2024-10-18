@@ -26,33 +26,23 @@ const loadData = async (url: string) => {
 }
 
 const loadPatients = async () => {
-  try {
-    const data = await loadData("patients");
+  const data = await loadData("patients");
 
-    patients.value = data
-      ?.split(',')
-      .reduce((acc: { [key: string]: number }, current: string) => {
-        acc[current] = (acc[current] || 0) + 1;
+  patients.value = data
+    ?.split(',')
+    .reduce((acc: { [key: string]: number }, current: string) => {
+      acc[current] = (acc[current] || 0) + 1;
 
-        return acc;
-      }, {});
+      return acc;
+    }, {});
 
-    patientsLoaded.value = true;
-
-  } catch (error) {
-    console.error(error);
-  }
+  patientsLoaded.value = true;
 }
 
 const loadDrugs = async () => {
-  try {
-    const data        = await loadData('drugs');
-    drugs.value       = data?.split(',');
-    drugsLoaded.value = true;
-
-  } catch (error) {
-    console.error(error);
-  }
+  const data        = await loadData('drugs');
+  drugs.value       = data?.split(',');
+  drugsLoaded.value = true;
 }
 
 const loadAllData = async () => {
