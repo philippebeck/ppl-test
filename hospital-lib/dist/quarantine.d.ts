@@ -45,9 +45,9 @@ export declare class Quarantine {
     /**
      * @method setDrugs
      * @description - Set the drugs that should be given to all the patients
-     * @param {string[]} drugs - The drugs to give to the patients
+     * @param {string[] | undefined} drugs - The drugs to give to the patients
      */
-    setDrugs(drugs: string[]): void;
+    setDrugs(drugs: string[] | undefined): void;
     /**
      * @method wait40Days
      * @description - Simulates what happens in the quarantine after 40 days
