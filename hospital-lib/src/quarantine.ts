@@ -83,9 +83,9 @@ export class Quarantine {
   /**
    * @method setDrugs
    * @description - Set the drugs that should be given to all the patients
-   * @param {string[]} drugs - The drugs to give to the patients
+   * @param {string[] | undefined} drugs - The drugs to give to the patients
    */
-  public setDrugs(drugs: string[]): void {
+  public setDrugs(drugs: string[] | undefined): void {
     this.drugs = drugs;
   }
 
