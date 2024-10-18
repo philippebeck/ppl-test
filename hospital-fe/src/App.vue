@@ -40,8 +40,10 @@ const loadPatients = async () => {
 }
 
 const loadDrugs = async () => {
-  const data        = await getData('drugs');
-  drugs.value       = data?.split(',');
+  const data = await getData('drugs');
+
+  drugs.value = data?.split(',');
+
   drugsLoaded.value = true;
 }
 
