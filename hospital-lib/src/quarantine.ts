@@ -49,19 +49,24 @@ export class Quarantine {
    * @description - Check if the given dead rule should be applied
    * @param {Object} rule - The dead rule to check
    * @param {function} rule.condition - The condition under which the rule should be applied
-   * @param {function} rule.action - The action that should be taken if the condition is true
+   * @param {function} rule.valid - The action that should be taken if the condition is true
+   * @param {function} rule.invalid - The action that should be taken if the condition is false
    * @returns {boolean} true if the rule has been applied, false otherwise
    */
   private checkDeadRules(rule: {
     condition: (drugs: string[]) => boolean;
-    action: (patients: PatientsRegister, newPatients: PatientsRegister) => void
+    valid: (patients: PatientsRegister, newPatients: PatientsRegister) => void
+    invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => void
   }): boolean {
 
     if (rule.condition(this.drugs)) {
-      rule.action(this.patients, this.newPatients);
+      rule.valid(this.patients, this.newPatients);
 
       return true;
     }
+
+    rule.invalid(this.patients, this.newPatients);
+
     return false;
   }
 
@@ -83,9 +88,9 @@ export class Quarantine {
   /**
    * @method setDrugs
    * @description - Set the drugs that should be given to all the patients
-   * @param {string[]} drugs - The drugs to give to the patients
+   * @param {string[] | undefined} drugs - The drugs to give to the patients
    */
-  public setDrugs(drugs: string[]): void {
+  public setDrugs(drugs: string[] | undefined): void {
     this.drugs = drugs;
   }
 
