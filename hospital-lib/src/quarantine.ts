@@ -54,14 +54,18 @@ export class Quarantine {
    */
   private checkDeadRules(rule: {
     condition: (drugs: string[]) => boolean;
-    action: (patients: PatientsRegister, newPatients: PatientsRegister) => void
+    valid: (patients: PatientsRegister, newPatients: PatientsRegister) => void
+    invalid: (patients: PatientsRegister, newPatients: PatientsRegister) => void
   }): boolean {
 
     if (rule.condition(this.drugs)) {
-      rule.action(this.patients, this.newPatients);
+      rule.valid(this.patients, this.newPatients);
 
       return true;
     }
+
+    rule.invalid(this.patients, this.newPatients);
+
     return false;
   }
 
