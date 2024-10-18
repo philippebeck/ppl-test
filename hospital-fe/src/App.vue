@@ -38,6 +38,9 @@ const loadPatients = async () => {
   patients.value = data
     ?.split(',')
     .reduce((acc: { [key: string]: number }, current: string) => {
+      const defaultState = { F: 0, H: 0, D: 0, T: 0, X: 0 };
+
+      acc = { ...defaultState, ...acc };
       acc[current] = (acc[current] || 0) + 1;
 
       return acc;
