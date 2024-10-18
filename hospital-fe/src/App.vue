@@ -14,7 +14,7 @@ const drugsLoaded    = ref<boolean>(false)
 const patients = ref<PatientsRegister | undefined>({})
 const drugs    = ref<string[] | undefined>([])
 
-const loadData = async (url: string) => {
+const getData = async (url: string) => {
   try {
     const response = await axios.get<string>('http://localhost:7200/' + url);
 
@@ -26,7 +26,7 @@ const loadData = async (url: string) => {
 }
 
 const loadPatients = async () => {
-  const data = await loadData("patients");
+  const data = await getData("patients");
 
   patients.value = data
     ?.split(',')
@@ -40,12 +40,12 @@ const loadPatients = async () => {
 }
 
 const loadDrugs = async () => {
-  const data        = await loadData('drugs');
+  const data        = await getData('drugs');
   drugs.value       = data?.split(',');
   drugsLoaded.value = true;
 }
 
-const loadAllData = async () => {
+const loadData = async () => {
   await loadPatients();
   await loadDrugs();
 }
@@ -54,7 +54,7 @@ const loadAllData = async () => {
 <template>
   <Title title="Hospital" sub="The Quarantine Simulation" :lvl="1"></Title>
 
-  <Button :action="loadAllData" label="Load the Patients & the Drugs" />
+  <Button :action="loadData" label="Load the Patients & the Drugs" />
   <Patients v-if="patientsLoaded" :patients="patients" />
   <Drugs v-if="drugsLoaded" :drugs="drugs" />
 </template>
