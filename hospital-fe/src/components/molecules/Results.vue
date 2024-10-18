@@ -2,7 +2,7 @@
 import { PatientsRegister } from 'hospital-lib';
 import Title from '../atoms/Title.vue'
 
-defineProps<{ patients: PatientsRegister | undefined, results: PatientsRegister | undefined }>()
+defineProps<{ input: PatientsRegister | undefined, output: PatientsRegister | undefined }>()
 
 </script>
 
@@ -15,14 +15,14 @@ defineProps<{ patients: PatientsRegister | undefined, results: PatientsRegister 
     <section>
       <Title title="Input" sub="The Patients before the Quarantine" />
       <ul>
-        <li v-for="(value, key) in patients" :key="key">{{ key }} : {{ value }}</li>
+        <li v-for="(value, key) in input" :key="key">{{ key }} : {{ value }}</li>
       </ul>
     </section>
 
     <section>
       <Title title="Output" sub="The Patients after the Quarantine" />
       <ul>
-        <li v-for="(value, key) in results" :key="key">{{ key }} : {{ value }}</li>
+        <li v-for="(value, key) in output" :key="key">{{ key }} : {{ value }}</li>
       </ul>
     </section>
   </article>

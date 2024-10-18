@@ -17,7 +17,7 @@ const resultsLoaded  = ref<boolean>(false)
 
 const patients = ref<PatientsRegister | undefined>({})
 const drugs    = ref<string[] | undefined>([])
-const results  = ref<PatientsRegister | undefined>({})
+const results  = ref<{ input: PatientsRegister | undefined, output: PatientsRegister | undefined }>({input: {}, output: {}})
 
 const getData = async (endpoint: string) => {
   const URL = `http://localhost:7200/${endpoint}`;
@@ -68,10 +68,10 @@ const reportResults = async () => {
 
     quarantine.setDrugs(drugs.value);
     quarantine.wait40Days();
-    
-    // TODO: fix the NaN results
-    results.value = quarantine.report();
-    resultsLoaded.value = true;
+
+    results.value.input  = patients.value;
+    results.value.output = quarantine.report();
+    resultsLoaded.value  = true;
 
   } else {
     console.error('Patients data is undefined. Cannot create Quarantine.');
@@ -93,8 +93,7 @@ const reportResults = async () => {
     label="Dispense the Drugs"
   />
   
-  <!-- TODO: link the patients & the results-->
-  <Results v-if="resultsLoaded" :patients="patients" :results="results" />
+  <Results v-if="resultsLoaded" :input="results.input" :output="results.output" />
 </template>
 
 <style scoped></style>
