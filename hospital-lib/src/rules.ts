@@ -17,8 +17,8 @@ export const deadRules: Array<{
 }> = [
   {
     condition: (drugs: string[]) => drugs.includes('As') && drugs.includes('P'),
-    valid: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T + patients.X,
-    invalid: (patients: PR, newPatients: PR) => newPatients.X += patients.X
+    valid: (patients: PR, newPatients: PR) => newPatients.X = patients.F + patients.H + patients.D + patients.T + patients.X,
+    invalid: (patients: PR, newPatients: PR) => newPatients.X = patients.X
   }
 ];
 
