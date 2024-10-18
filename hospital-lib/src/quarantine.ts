@@ -49,7 +49,8 @@ export class Quarantine {
    * @description - Check if the given dead rule should be applied
    * @param {Object} rule - The dead rule to check
    * @param {function} rule.condition - The condition under which the rule should be applied
-   * @param {function} rule.action - The action that should be taken if the condition is true
+   * @param {function} rule.valid - The action that should be taken if the condition is true
+   * @param {function} rule.invalid - The action that should be taken if the condition is false
    * @returns {boolean} true if the rule has been applied, false otherwise
    */
   private checkDeadRules(rule: {
