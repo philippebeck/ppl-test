@@ -4,18 +4,21 @@ import { PatientsRegister as PR } from './patientsRegister';
  * @constant deadRules
  * @type {Array<{
  *  condition: (drugs: string[]) => boolean;
- *  action: (patients: PR, newPatients: PR) => void
+ *  valid: (patients: PR, newPatients: PR) => void
+ *  invalid: (patients: PR, newPatients: PR) => void
  * }>}
  * @description - Dead rules
  *  - If the patients have Aspirin & Paracetamol, they will die
  */
 export const deadRules: Array<{
   condition: (drugs: string[]) => boolean;
-  action: (patients: PR, newPatients: PR) => void
+  valid: (patients: PR, newPatients: PR) => void;
+  invalid: (patients: PR, newPatients: PR) => void
 }> = [
   {
     condition: (drugs: string[]) => drugs.includes('As') && drugs.includes('P'),
-    action: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T
+    valid: (patients: PR, newPatients: PR) => newPatients.X += patients.F + patients.H + patients.D + patients.T + patients.X,
+    invalid: (patients: PR, newPatients: PR) => newPatients.X += patients.X
   }
 ];
 
