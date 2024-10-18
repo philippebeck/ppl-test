@@ -19,9 +19,11 @@ const patients = ref<PatientsRegister | undefined>({})
 const drugs    = ref<string[] | undefined>([])
 const results  = ref<PatientsRegister | undefined>({})
 
-const getData = async (url: string) => {
+const getData = async (endpoint: string) => {
+  const URL = `http://localhost:7200/${endpoint}`;
+
   try {
-    const response = await axios.get<string>('http://localhost:7200/' + url);
+    const response = await axios.get<string>(URL);
 
     return response.data;
 
