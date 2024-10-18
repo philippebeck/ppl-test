@@ -36,7 +36,7 @@ export class QuarantineTest {
    *  Then Quarantine can provide a report that gives the number of patients that have the given disease
    */
   public setup() {
-    this.quarantine = new Quarantine({ F: 1, H: 2, D: 3, T: 1, X: 0 });
+    this.quarantine = new Quarantine({ F: 1, H: 2, D: 3, T: 1, X: 2 });
   }
 
   //! ********** TEST BEFORE DRUG **********
@@ -47,7 +47,7 @@ export class QuarantineTest {
    * @description - Get the report of the patients before treatment
    */
   public beforeTreatment(): void {
-    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 3, T: 1, X: 0 });
+    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 3, T: 1, X: 2 });
   }
 
   //! ********** TEST WITHOUT DRUG **********
@@ -61,7 +61,7 @@ export class QuarantineTest {
   public noTreatment(): void {
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 0, T: 1, X: 3 });
+    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 0, T: 1, X: 5 });
   }
 
     //! ********** TESTS WITH ONLY ONE DRUG **********
@@ -77,7 +77,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 1, H: 3, D: 0, T: 0, X: 3 });
+    Expect(this.quarantine.report()).toEqual({ F: 1, H: 3, D: 0, T: 0, X: 5 });
   }
 
   @Test()
@@ -91,7 +91,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['As']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 0, T: 1, X: 3 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 0, T: 1, X: 5 });
   }
 
   @Test()
@@ -104,7 +104,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 3, T: 1, X: 0 });
+    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 3, T: 1, X: 2 });
   }
 
   @Test()
@@ -118,7 +118,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 0, T: 1, X: 3 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 0, T: 1, X: 5 });
   }
 
   //! ********** TESTS WITH TWO DRUGS **********
@@ -135,7 +135,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'As']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 4, D: 0, T: 0, X: 3 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 4, D: 0, T: 0, X: 5 });
   }
 
   @Test()
@@ -150,7 +150,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 3, H: 1, D: 3, T: 0, X: 0 });
+    Expect(this.quarantine.report()).toEqual({ F: 3, H: 1, D: 3, T: 0, X: 2 });
   }
 
   @Test()
@@ -165,7 +165,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 4, D: 0, T: 0, X: 3 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 4, D: 0, T: 0, X: 5 });
   }
 
   @Test()
@@ -179,7 +179,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['As', 'I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 3, T: 1, X: 0 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 3, T: 1, X: 2 });
   }
 
   @Test()
@@ -192,7 +192,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['P', 'As']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 7 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 9 });
   }
 
   @Test()
@@ -206,7 +206,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['P', 'I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 3, T: 1, X: 0 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 3, T: 1, X: 2 });
   }
 
   //! ********** TESTS WITH THREE DRUGS **********
@@ -223,7 +223,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'As', 'I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 2, H: 2, D: 3, T: 0, X: 0 });
+    Expect(this.quarantine.report()).toEqual({ F: 2, H: 2, D: 3, T: 0, X: 2 });
   }
 
   @Test()
@@ -236,7 +236,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'As', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 7 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 9 });
   }
 
   @Test()
@@ -251,7 +251,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'I', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 2, H: 2, D: 3, T: 0, X: 0 });
+    Expect(this.quarantine.report()).toEqual({ F: 2, H: 2, D: 3, T: 0, X: 2 });
   }
 
   @Test()
@@ -264,7 +264,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['As', 'I', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 7 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 9 });
   }
 
   //! ********** TESTS WITH FOUR DRUGS **********
@@ -279,6 +279,6 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'As', 'I', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 7 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 9 });
   }
 }
