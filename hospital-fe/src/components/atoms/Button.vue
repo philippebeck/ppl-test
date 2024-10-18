@@ -8,4 +8,9 @@ defineProps<{ label: string, action: () => void }>()
   <button @click="action">{{ label }}</button>
 </template>
 
-<style scoped></style>
+<style scoped>
+  button {
+    display: block;
+    margin: auto;
+  }
+</style>
