@@ -64,6 +64,7 @@ const reportResults = async () => {
     quarantine.setDrugs(drugs.value);
     quarantine.wait40Days();
     
+    // TODO: fix the NaN results
     results.value = quarantine.report();
     resultsLoaded.value = true;
 
