@@ -23,6 +23,18 @@ const drugsList    = ref<string[]>([])
 const results      = ref<{ [key: string]: { input: number, output: number } }>({})
 const resultsList  = ref<{ input: number, output: number }[]>([])
 
+/**
+ * @method getData
+ *
+ * @description
+ *  Make a GET request to the given endpoint & return the response data
+ *
+ * @param {string} endpoint
+ *  The endpoint to make the request to
+ *
+ * @returns {Promise<string | undefined>}
+ *  The response data of the request
+ */
 const getData = async (endpoint: string) => {
   const URL = `http://localhost:7200/${endpoint}`;
 
@@ -36,6 +48,14 @@ const getData = async (endpoint: string) => {
   }
 }
 
+/**
+ * @method loadPatients
+ *
+ * @description
+ *  Load the patients from the API and put them in the state
+ *
+ * @returns {Promise<void>}
+ */
 const loadPatients = async () => {
   const data = await getData("patients");
 
@@ -53,6 +73,14 @@ const loadPatients = async () => {
   patientsLoaded.value = true;
 }
 
+  /**
+   * @method loadDrugs
+   *
+   * @description
+   *  Load the drugs from the API and put them in the state
+   *
+   * @returns {Promise<void>}
+   */
 const loadDrugs = async () => {
   const data = await getData('drugs');
 
@@ -62,11 +90,27 @@ const loadDrugs = async () => {
   drugsLoaded.value = true;
 }
 
+  /**
+   * @method loadData
+   *
+   * @description
+   *  Load the initial data for the simulation
+   *
+   * @returns {Promise<void>}
+   */
 const loadData = async () => {
   await loadPatients();
   await loadDrugs();
 }
 
+  /**
+   * @method reportResults
+   *
+   * @description
+   *  Simulate a quarantine, add the result to the results list and update the UI
+   *
+   * @returns {Promise<void>}
+   */
 const reportResults = async () => {
   if (patients.value) {
     const quarantine   = new Quarantine(patients.value);
@@ -98,18 +142,34 @@ const reportResults = async () => {
     resultsLoaded.value = true;
 
   } else {
-    console.error('Patients data is undefined. Cannot create Quarantine.');
+    console.error(
+      'Patients data is undefined. Cannot create Quarantine.'
+    );
   }
 }
 </script>
 
 <template>
-  <Title title="Hospital" sub="The Quarantine Simulation" :lvl="1"></Title>
+  <Title
+    title="Hospital"
+    sub="The Quarantine Simulation"
+    :lvl="1"
+  />
 
-  <Button :action="loadData" label="Load the Patients & the Drugs" />
+  <Button
+    :action="loadData"
+    label="Load the Patients & the Drugs"
+  />
 
-  <Patients v-if="patientsLoaded" :patients="patients" />
-  <Drugs v-if="drugsLoaded" :drugs="drugs" />
+  <Patients
+    v-if="patientsLoaded"
+    :patients="patients"
+  />
+
+  <Drugs
+    v-if="drugsLoaded"
+    :drugs="drugs"
+  />
 
   <Button
     v-if="patientsLoaded && drugsLoaded"
