@@ -36,15 +36,15 @@ const resultsList  = ref<{ input: number, output: number }[]>([])
  *  The response data of the request
  */
 const getData = async (endpoint: string) => {
-  const URL = `http://localhost:7200/${endpoint}`;
+  const URL = `http://localhost:7200/${endpoint}`
 
   try {
-    const response = await axios.get<string>(URL);
+    const response = await axios.get<string>(URL)
 
-    return response.data;
+    return response.data
 
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 
@@ -57,20 +57,20 @@ const getData = async (endpoint: string) => {
  * @returns {Promise<void>}
  */
 const loadPatients = async () => {
-  const data = await getData("patients");
+  const data = await getData("patients")
 
   patients.value = data
     ?.split(',')
     .reduce((acc: { [key: string]: number }, current: string) => {
-      const defaultState = { F: 0, H: 0, D: 0, T: 0, X: 0 };
+      const defaultState = { F: 0, H: 0, D: 0, T: 0, X: 0 }
 
-      acc = { ...defaultState, ...acc };
-      acc[current] = (acc[current] || 0) + 1;
+      acc = { ...defaultState, ...acc }
+      acc[current] = (acc[current] || 0) + 1
 
-      return acc;
-    }, {});
+      return acc
+    }, {})
 
-  patientsLoaded.value = true;
+  patientsLoaded.value = true
 }
 
   /**
@@ -82,12 +82,12 @@ const loadPatients = async () => {
    * @returns {Promise<void>}
    */
 const loadDrugs = async () => {
-  const data = await getData('drugs');
+  const data = await getData('drugs')
 
   currentDrugs.value = data
-  drugs.value = data?.split(',');
+  drugs.value = data?.split(',')
 
-  drugsLoaded.value = true;
+  drugsLoaded.value = true
 }
 
   /**
@@ -99,8 +99,8 @@ const loadDrugs = async () => {
    * @returns {Promise<void>}
    */
 const loadData = async () => {
-  await loadPatients();
-  await loadDrugs();
+  await loadPatients()
+  await loadDrugs()
 }
 
   /**
@@ -113,10 +113,10 @@ const loadData = async () => {
    */
 const reportResults = async () => {
   if (patients.value) {
-    const quarantine   = new Quarantine(patients.value);
+    const quarantine   = new Quarantine(patients.value)
 
-    quarantine.setDrugs(currentDrugs.value);
-    quarantine.wait40Days();
+    quarantine.setDrugs(currentDrugs.value)
+    quarantine.wait40Days()
 
     const newResult = Object
       .keys(patients.value)
@@ -125,26 +125,26 @@ const reportResults = async () => {
         acc[key] = {
           input: patients.value[key],
           output: quarantine.report()[key]
-        };
+        }
 
-        return acc;
-      }, {});
+        return acc
+      }, {})
 
-    resultsList.value.push(newResult);
-    drugsList.value.push(currentDrugs.value.slice());
+    resultsList.value.push(newResult)
+    drugsList.value.push(currentDrugs.value.slice())
 
     if (resultsList.value.length > 10) {
-      resultsList.value.shift();
-      drugsList.value.shift();
+      resultsList.value.shift()
+      drugsList.value.shift()
     }
 
-    totalTests.value++;
-    resultsLoaded.value = true;
+    totalTests.value++
+    resultsLoaded.value = true
 
   } else {
     console.error(
       'Patients data is undefined. Cannot create Quarantine.'
-    );
+    )
   }
 }
 </script>
