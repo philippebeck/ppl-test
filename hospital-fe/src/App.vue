@@ -120,6 +120,41 @@
   }
 
   /**
+   * @method formatNewResult
+   *
+   * @description
+   *  Format the results of a quarantine simulation
+   *
+   * @param {PatientsRegister} input
+   *  The input states of the patients
+   *
+   * @param {PatientsRegister} output
+   *  The output states of the patients
+   *
+   * @returns {Object}
+   *  An object with each key being a patient state & each value being an object with
+   *  input & output properties, which are the counts of the state in the input &
+   *  output states, respectively
+   */
+  const formatNewResult = (
+    input: PatientsRegister,
+    output: PatientsRegister
+  ) => {
+
+    return Object
+      .keys(input)
+      .reduce((acc, key) => {
+
+        acc[key] = {
+          input: input[key],
+          output: output[key]
+        }
+
+        return acc
+      }, {})
+  }
+
+  /**
    * @method reportResults
    *
    * @description
@@ -134,17 +169,7 @@
       quarantine.setDrugs(currentDrugs.value)
       quarantine.wait40Days()
 
-      const newResult = Object
-        .keys(patients.value)
-        .reduce((acc, key) => {
-
-          acc[key] = {
-            input: patients.value[key],
-            output: quarantine.report()[key]
-          }
-
-          return acc
-        }, {})
+      const newResult = formatNewResult(patients.value, quarantine.report())
 
       resultsList.value.push(newResult)
       drugsList.value.push(currentDrugs.value.slice())
