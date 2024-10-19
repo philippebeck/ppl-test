@@ -15,7 +15,10 @@
     </h1>
 
     <h2 v-else>
-      <i :class="icon"></i>
+      <i
+        :class="icon"
+        aria-hidden="true"
+      ></i>
       {{ title }}
     </h2>
     

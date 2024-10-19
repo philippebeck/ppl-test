@@ -33,7 +33,7 @@
 <template>
   <section>
     <Title
-      icon="fa-solid fa-vials"
+      icon="fa-solid fa-vial-virus"
       title="Results"
       sub="The Results of the Quarantine"
     />
@@ -43,15 +43,32 @@
       :key="index"
     >
       <caption>
+        <i
+          class="fa-solid fa-building-lock"
+          aria-hidden="true"
+        ></i>
+
         <b>Quarantine #{{ total - index }}</b>
         <br>
+
+        <i
+          class="fa-solid fa-pills"
+          aria-hidden="true"
+        ></i>
+
         <i>Drugs given</i>: 
         {{ getDrugsGiven(index) }}
       </caption>
 
       <thead>
         <tr>
-          <th>States</th>
+          <th>
+            <i
+              class="fa-solid fa-disease"
+              aria-hidden="true"
+            ></i>
+            States
+          </th>
           <th>Before</th>
           <th>After</th>
         </tr>
