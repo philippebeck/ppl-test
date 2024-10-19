@@ -23,8 +23,8 @@
    * @returns {string}
    *  The drugs that were given to the patients at the given index
    */
-  const getDrugsGiven = (index: number) => {
-    const drugsGiven = props.drugs[props.results.length - index - 1]
+  const getDrugsGiven = (index: number) : string => {
+    const drugsGiven: string = props.drugs[props.results.length - index - 1]
 
     return drugsGiven ? drugsGiven : 'none'
   }
