@@ -2,7 +2,8 @@
 import { PatientsRegister } from 'hospital-lib';
 import Title from '../atoms/Title.vue'
 
-defineProps<{ drugs: string[] | undefined, results: { [key: string]: { input: number, output: number } } }>()
+defineProps<{ drugs: string[] | undefined, resultsList: { input: number, output: number }[] }>()
+
 
 </script>
 
@@ -10,11 +11,11 @@ defineProps<{ drugs: string[] | undefined, results: { [key: string]: { input: nu
   <article>
     <Title title="Results" sub="The Results of the Quarantine" />
 
-    <!-- TODO: switch to a table to display the last 10 results -->
-
-    <table>
+    <table v-for="(result, index) in resultsList.slice().reverse()" :key="index">
       <caption>
-        <i>Drugs given</i>: {{ drugs }}
+        <b>Test #{{ resultsList.length - index }}</b>
+        <br>
+        <i>Drugs given</i>: {{ drugs[resultsList.length - index - 1] }}
       </caption>
       <thead>
         <tr>
@@ -24,7 +25,7 @@ defineProps<{ drugs: string[] | undefined, results: { [key: string]: { input: nu
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(value, key) in results" :key="key">
+        <tr v-for="(value, key) in result" :key="key">
           <td>{{ key }}</td>
           <td>{{ value.input }}</td>
           <td>{{ value.output }}</td>
@@ -55,7 +56,7 @@ defineProps<{ drugs: string[] | undefined, results: { [key: string]: { input: nu
   }
 
   table {
-    margin: auto;
+    margin: 50px auto;
     border: 2px solid #000;
     width: 100%;
   }

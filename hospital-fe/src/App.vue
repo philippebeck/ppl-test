@@ -18,7 +18,9 @@ const resultsLoaded  = ref<boolean>(false)
 const patients     = ref<PatientsRegister | undefined>({})
 const drugs        = ref<string[] | undefined>([])
 const currentDrugs = ref<string[] | undefined>([])
+const drugsList    = ref<string[]>([])
 const results      = ref<{ [key: string]: { input: number, output: number } }>({})
+const resultsList  = ref<{ input: number, output: number }[]>([])
 
 const getData = async (endpoint: string) => {
   const URL = `http://localhost:7200/${endpoint}`;
@@ -53,6 +55,7 @@ const loadPatients = async () => {
 const loadDrugs = async () => {
   const data = await getData('drugs');
 
+  currentDrugs.value = data
   drugs.value = data?.split(',');
 
   drugsLoaded.value = true;
@@ -66,12 +69,11 @@ const loadData = async () => {
 const reportResults = async () => {
   if (patients.value) {
     const quarantine   = new Quarantine(patients.value);
-    currentDrugs.value = drugs.value;
 
     quarantine.setDrugs(currentDrugs.value);
     quarantine.wait40Days();
 
-    results.value = Object
+    const newResult = Object
       .keys(patients.value)
       .reduce((acc, key) => {
 
@@ -82,6 +84,16 @@ const reportResults = async () => {
 
         return acc;
       }, {});
+
+    resultsList.value.push(newResult);
+    drugsList.value.push(currentDrugs.value.slice());
+
+    if (resultsList.value.length > 10) {
+      resultsList.value.shift();
+      drugsList.value.shift();
+    }
+
+    console.log(drugsList.value);
 
     resultsLoaded.value  = true;
 
@@ -105,7 +117,7 @@ const reportResults = async () => {
     label="Dispense the Drugs"
   />
   
-  <Results v-if="resultsLoaded" :drugs="currentDrugs" :results="results" />
+  <Results v-if="resultsLoaded" :drugs="drugsList" :resultsList="resultsList" />
 </template>
 
 <style scoped></style>
