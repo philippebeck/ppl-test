@@ -2,7 +2,9 @@
   import { PatientsRegister } from 'hospital-lib';
   import Title from '../atoms/Title.vue'
 
-  defineProps<{ patients: PatientsRegister | undefined }>()
+  defineProps<{
+    patients: PatientsRegister | undefined
+  }>()
 </script>
 
 <template>

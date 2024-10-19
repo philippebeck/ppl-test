@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import Title from '../atoms/Title.vue'
 
-  defineProps<{ drugs: string[] | undefined }>()
+  defineProps<{
+    drugs: string[] | undefined
+  }>()
 </script>
 
 <template>

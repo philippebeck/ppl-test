@@ -4,7 +4,10 @@
 
   const props = defineProps<{
     drugs: string[] | undefined,
-    results: { input: number, output: number }[],
+    results: {
+      input: number,
+      output: number
+    }[],
     total: number
   }>()
 

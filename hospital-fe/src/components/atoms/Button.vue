@@ -1,5 +1,8 @@
 <script setup lang="ts">
-  defineProps<{ label: string, action: () => void }>()
+  defineProps<{ 
+    label: string,
+    action: () => void
+  }>()
 </script>
 
 <template>
