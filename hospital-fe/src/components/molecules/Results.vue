@@ -2,7 +2,7 @@
 import { PatientsRegister } from 'hospital-lib';
 import Title from '../atoms/Title.vue'
 
-defineProps<{ input: PatientsRegister | undefined, output: PatientsRegister | undefined }>()
+defineProps<{ drugs: string[] | undefined, results: { [key: string]: { input: number, output: number } } }>()
 
 </script>
 
@@ -12,19 +12,25 @@ defineProps<{ input: PatientsRegister | undefined, output: PatientsRegister | un
 
     <!-- TODO: switch to a table to display the last 10 results -->
 
-    <section>
-      <Title title="Input" sub="The Patients before the Quarantine" />
-      <ul>
-        <li v-for="(value, key) in input" :key="key">{{ key }} : {{ value }}</li>
-      </ul>
-    </section>
-
-    <section>
-      <Title title="Output" sub="The Patients after the Quarantine" />
-      <ul>
-        <li v-for="(value, key) in output" :key="key">{{ key }} : {{ value }}</li>
-      </ul>
-    </section>
+    <table>
+      <caption>
+        <i>Drugs given</i>: {{ drugs }}
+      </caption>
+      <thead>
+        <tr>
+          <th>States</th>
+          <th>Before</th>
+          <th>After</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(value, key) in results" :key="key">
+          <td>{{ key }}</td>
+          <td>{{ value.input }}</td>
+          <td>{{ value.output }}</td>
+        </tr>
+      </tbody>
+    </table>
   </article>
 </template>
 
@@ -37,9 +43,24 @@ defineProps<{ input: PatientsRegister | undefined, output: PatientsRegister | un
     color: #000;
   }
 
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  table,
+  th,
+  td {
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #000;
+  }
+
+  table {
+    margin: auto;
+    border: 2px solid #000;
+    width: 100%;
+  }
+
+  caption {
+    margin-bottom: 20px;
   }
 </style>
