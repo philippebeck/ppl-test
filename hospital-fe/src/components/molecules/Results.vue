@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { PatientsRegister } from 'hospital-lib'
   import Title from '../atoms/Title.vue'
 
   const props = defineProps<{
