@@ -154,6 +154,20 @@
       }, {})
   }
 
+/**
+ * @method truncateResults
+ *
+ * @description
+ *  Truncate the results list if its length exceeds 10 by removing the oldest result
+ *  from both the results list & the corresponding drugs list
+ */
+  const truncateResults = () => {
+    if (resultsList.value.length > 10) {
+      resultsList.value.shift()
+      drugsList.value.shift()
+    }
+  }
+
   /**
    * @method reportResults
    *
@@ -174,10 +188,7 @@
       resultsList.value.push(newResult)
       drugsList.value.push(currentDrugs.value.slice())
 
-      if (resultsList.value.length > 10) {
-        resultsList.value.shift()
-        drugsList.value.shift()
-      }
+      truncateResults()
 
       totalTests.value++
       resultsLoaded.value = true
