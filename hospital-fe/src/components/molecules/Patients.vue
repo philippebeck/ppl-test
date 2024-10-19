@@ -11,7 +11,9 @@ defineProps<{ patients: PatientsRegister | undefined }>()
     <Title title="Patients" sub="The List of Patients" />
 
     <ul>
-      <li v-for="(value, key) in patients" :key="key">{{ key }} : {{ value }}</li>
+      <li v-for="(value, key) in patients" :key="key">
+        {{ key }} : {{ value }}
+      </li>
     </ul>
   </section>
 </template>

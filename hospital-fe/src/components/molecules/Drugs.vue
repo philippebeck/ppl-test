@@ -10,7 +10,9 @@ defineProps<{ drugs: string[] | undefined }>()
     <Title title="Drugs" sub="The List of Drugs" />
 
     <ul>
-      <li v-for="drug in drugs" :key="drug">{{ drug }}</li>
+      <li v-for="drug in drugs" :key="drug">
+        {{ drug }}
+      </li>
     </ul>
   </section>
 </template>
