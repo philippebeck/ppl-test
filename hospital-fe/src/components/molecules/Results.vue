@@ -13,9 +13,15 @@
 
   /**
    * @method getDrugsGiven
-   * @description - Get the drugs that were given to the patients at a given index
-   * @param {number} index - The index of the drugs to get
-   * @returns {string} - The drugs that were given to the patients at the given index
+   *
+   * @description
+   *  Get the drugs that were given to the patients at a given index
+   *
+   * @param {number} index
+   *  The index of the drugs to get
+   *
+   * @returns {string}
+   *  The drugs that were given to the patients at the given index
    */
   const getDrugsGiven = (index: number) => {
     const drugsGiven = props.drugs[props.results.length - index - 1]
