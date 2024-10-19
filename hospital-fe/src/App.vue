@@ -11,6 +11,7 @@ import Patients from './components/molecules/Patients.vue'
 import Drugs from './components/molecules/Drugs.vue'
 import Results from './components/molecules/Results.vue'
 
+const totalTests     = ref<number>(0)
 const patientsLoaded = ref<boolean>(false)
 const drugsLoaded    = ref<boolean>(false)
 const resultsLoaded  = ref<boolean>(false)
@@ -93,9 +94,8 @@ const reportResults = async () => {
       drugsList.value.shift();
     }
 
-    console.log(drugsList.value);
-
-    resultsLoaded.value  = true;
+    totalTests.value++;
+    resultsLoaded.value = true;
 
   } else {
     console.error('Patients data is undefined. Cannot create Quarantine.');
@@ -117,7 +117,12 @@ const reportResults = async () => {
     label="Dispense the Drugs"
   />
   
-  <Results v-if="resultsLoaded" :drugs="drugsList" :resultsList="resultsList" />
+  <Results
+    v-if="resultsLoaded"
+    :drugs="drugsList"
+    :resultsList="resultsList"
+    :total="totalTests"
+  />
 </template>
 
 <style scoped></style>

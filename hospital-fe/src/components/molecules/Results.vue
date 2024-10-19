@@ -2,8 +2,7 @@
 import { PatientsRegister } from 'hospital-lib';
 import Title from '../atoms/Title.vue'
 
-defineProps<{ drugs: string[] | undefined, resultsList: { input: number, output: number }[] }>()
-
+defineProps<{ drugs: string[] | undefined, resultsList: { input: number, output: number }[], total: number }>()
 
 </script>
 
@@ -13,9 +12,9 @@ defineProps<{ drugs: string[] | undefined, resultsList: { input: number, output:
 
     <table v-for="(result, index) in resultsList.slice().reverse()" :key="index">
       <caption>
-        <b>Test #{{ resultsList.length - index }}</b>
+        <b>Quarantine #{{ total - index }}</b>
         <br>
-        <i>Drugs given</i>: {{ drugs[resultsList.length - index - 1] }}
+        <i>Drugs given</i>: {{ drugs[resultsList.length - index - 1] ? drugs[resultsList.length - index - 1] : 'none' }}
       </caption>
       <thead>
         <tr>
