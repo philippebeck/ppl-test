@@ -2,12 +2,15 @@ import { PatientsRegister as PR } from './patientsRegister';
 
 /**
  * @constant deadRules
+ *
  * @type {Array<{
  *  condition: (drugs: string[]) => boolean;
  *  valid: (patients: PR, newPatients: PR) => void
  *  invalid: (patients: PR, newPatients: PR) => void
  * }>}
- * @description - Dead rules
+ *
+ * @description
+ *  Dead rules
  *  - If the patients have Aspirin & Paracetamol, they will die
  */
 export const deadRules: Array<{
@@ -20,16 +23,19 @@ export const deadRules: Array<{
     valid: (patients: PR, newPatients: PR) => newPatients.X = patients.F + patients.H + patients.D + patients.T + patients.X,
     invalid: (patients: PR, newPatients: PR) => newPatients.X = patients.X
   }
-];
+]
 
 /**
  * @constant treatmentRules
+ *
  * @type {Array<{
  *  condition: (drugs: string[]) => boolean;
  *  valid: (patients: PR, newPatients: PR) => void;
  *  invalid: (patients: PR, newPatients: PR) => void
  * }>}
- * @description - Treatment rules
+ *
+ * @description
+ *  Treatment rules
  *  - If healthy patients have Antibiotic & Insulin, they will have a fever
  *  - If feverish patients have Aspirin or Paracetamol, the fever will be cured
  *  - If tuberculosis patients have Antibiotic, the tuberculosis will be cured
@@ -60,4 +66,4 @@ export const treatmentRules: Array<{
     valid: (patients: PR, newPatients: PR) => newPatients.X += patients.D,
     invalid: (patients: PR, newPatients: PR) => newPatients.D += patients.D
   }
-];
+]
