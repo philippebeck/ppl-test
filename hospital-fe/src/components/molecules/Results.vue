@@ -80,23 +80,30 @@
   }
 
   table {
-    margin: 50px auto;
-    border: 2px solid #000;
-    width: 100%;
-  }
-
-  caption {
-    margin-bottom: 20px;
-  }
-
-  table,
-  th,
-  td {
     border-collapse: collapse;
   }
 
-  th,
-  td {
+  th {
+    border-collapse: collapse;
     border: 1px solid #000;
+  }
+
+  td {
+    border-collapse: collapse;
+    border: 1px solid #000;
+  }
+
+  table {
+    display: inline-block;
+    margin: 50px;
+    width: fit-content;
+  }
+
+  caption {
+    padding: 10px;
+  }
+
+  th {
+    padding: 10px;
   }
 </style>

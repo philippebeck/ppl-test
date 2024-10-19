@@ -21,11 +21,11 @@
 </template>
 
 <style scoped>
-  * {
-    margin: 0;
+  h1 {
+    font-size: 3rem;
   }
 
-  hgroup {
-    margin: 20px;
+  h2 {
+    font-size: 1.5rem;
   }
 </style>
