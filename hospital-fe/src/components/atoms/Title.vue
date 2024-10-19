@@ -4,8 +4,13 @@
 
 <template>
   <hgroup>
-    <h1 v-if="lvl === 1">{{ title }}</h1>
-    <h2 v-else>{{ title }}</h2>
+    <h1 v-if="lvl === 1">
+      {{ title }}
+    </h1>
+
+    <h2 v-else>
+      {{ title }}
+    </h2>
     
     <p>{{ sub }}</p>
   </hgroup>

@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  <button @click="action">{{ label }}</button>
+  <button @click="action">
+    {{ label }}
+  </button>
 </template>
 
 <style scoped>
