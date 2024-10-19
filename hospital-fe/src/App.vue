@@ -211,6 +211,7 @@
 
   <Button
     :action="loadData"
+    icon="fa-solid fa-file-medical"
     label="Load the Patients & the Drugs"
   />
 
@@ -227,6 +228,7 @@
   <Button
     v-if="patientsLoaded && drugsLoaded"
     :action="reportResults"
+    icon="fa-solid fa-user-nurse"
     label="Dispense the Drugs"
   />
   

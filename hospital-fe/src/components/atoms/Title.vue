@@ -10,7 +10,10 @@
 <template>
   <hgroup>
     <h1 v-if="lvl === 1">
-      <i :class="icon"></i>
+      <i 
+        :class="icon"
+        aria-hidden="true"
+      ></i>
       {{ title }}
     </h1>
 

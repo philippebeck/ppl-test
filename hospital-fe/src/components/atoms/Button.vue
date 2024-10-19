@@ -1,12 +1,18 @@
 <script setup lang="ts">
-  defineProps<{ 
+  defineProps<{
+    icon: string,
     label: string,
     action: () => void
   }>()
 </script>
 
 <template>
-  <button @click="action">
+  <button
+    @click="action">
+    <i
+      :class="icon"
+      aria-hidden="true"
+    ></i>
     {{ label }}
   </button>
 </template>
