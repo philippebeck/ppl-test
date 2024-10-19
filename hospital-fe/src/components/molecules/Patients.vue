@@ -10,6 +10,7 @@
 <template>
   <section>
     <Title
+      icon="fa-solid fa-hospital-user"
       title="Patients"
       sub="The List of Patients"
     />

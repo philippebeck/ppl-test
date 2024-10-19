@@ -9,6 +9,7 @@
 <template>
   <section>
     <Title
+      icon="fa-solid fa-pills"
       title="Drugs"
       sub="The List of Drugs"
     />

@@ -203,6 +203,7 @@
 
 <template>
   <Title
+    icon="fa-regular fa-hospital"
     title="Hospital"
     sub="The Quarantine Simulation"
     :lvl="1"

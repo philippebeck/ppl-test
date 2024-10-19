@@ -1,5 +1,6 @@
 <script setup lang="ts">
   defineProps<{
+    icon: string,
     title: string,
     sub: string,
     lvl?: number
@@ -9,10 +10,12 @@
 <template>
   <hgroup>
     <h1 v-if="lvl === 1">
+      <i :class="icon"></i>
       {{ title }}
     </h1>
 
     <h2 v-else>
+      <i :class="icon"></i>
       {{ title }}
     </h2>
     

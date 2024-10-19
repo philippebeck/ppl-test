@@ -33,6 +33,7 @@
 <template>
   <section>
     <Title
+      icon="fa-solid fa-vials"
       title="Results"
       sub="The Results of the Quarantine"
     />
