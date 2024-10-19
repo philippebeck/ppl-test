@@ -120,7 +120,7 @@ const reportResults = async () => {
   <Results
     v-if="resultsLoaded"
     :drugs="drugsList"
-    :resultsList="resultsList"
+    :results="resultsList"
     :total="totalTests"
   />
 </template>
