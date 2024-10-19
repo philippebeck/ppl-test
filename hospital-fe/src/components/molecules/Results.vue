@@ -96,7 +96,7 @@
 
   table {
     display: inline-block;
-    margin: 50px;
+    margin: 20px 50px;
     width: fit-content;
   }
 
