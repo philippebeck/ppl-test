@@ -49,17 +49,20 @@ const getData = async (endpoint: string) => {
 }
 
 /**
- * @method loadPatients
+ * @method formatPatientsData
  *
  * @description
- *  Load the patients from the API and put them in the state
+ *  Parses a string of patient states & counts occurrences of each state
  *
- * @returns {Promise<void>}
+ * @param {string} data
+ *  A comma-separated string representing patient states
+ *
+ * @returns {Object}
+ *  An object with the counts of each state, initialized with default values
  */
-const loadPatients = async () => {
-  const data = await getData("patients")
+const formatPatientsData = (data) => {
 
-  patients.value = data
+  return data
     ?.split(',')
     .reduce((acc: { [key: string]: number }, current: string) => {
       const defaultState = { F: 0, H: 0, D: 0, T: 0, X: 0 }
@@ -69,7 +72,20 @@ const loadPatients = async () => {
 
       return acc
     }, {})
+}
 
+/**
+ * @method loadPatients
+ *
+ * @description
+ *  Load the patients from the API & put them in the state
+ *
+ * @returns {Promise<void>}
+ */
+const loadPatients = async () => {
+  const data = await getData("patients")
+
+  patients.value       = formatPatientsData(data)
   patientsLoaded.value = true
 }
 
