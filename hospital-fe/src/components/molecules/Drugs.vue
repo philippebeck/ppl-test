@@ -1,16 +1,26 @@
 <script setup lang="ts">
-import Title from '../atoms/Title.vue'
+  import Title from '../atoms/Title.vue'
 
-defineProps<{ drugs: string[] | undefined }>()
-
+  defineProps<{
+    drugs: string[] | undefined
+  }>()
 </script>
 
 <template>
   <section>
-    <Title title="Drugs" sub="The List of Drugs" />
+    <Title
+      icon="fa-solid fa-pills"
+      title="Drugs"
+      sub="The List of Drugs"
+    />
 
     <ul>
-      <li v-for="drug in drugs" :key="drug">{{ drug }}</li>
+      <li
+        v-for="drug in drugs"
+        :key="drug"
+      >
+        {{ drug }}
+      </li>
     </ul>
   </section>
 </template>
@@ -28,8 +38,5 @@ defineProps<{ drugs: string[] | undefined }>()
   ul {
     display: flex;
     place-content: space-evenly;
-    margin: 0;
-    padding: 0;
-    list-style: none;
   }
 </style>

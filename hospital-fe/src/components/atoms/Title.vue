@@ -1,22 +1,40 @@
 <script setup lang="ts">
-defineProps<{ title: string, sub: string, lvl?: number }>()
+  defineProps<{
+    icon: string,
+    title: string,
+    sub: string,
+    lvl?: number
+  }>()
 </script>
 
 <template>
   <hgroup>
-    <h1 v-if="lvl === 1">{{ title }}</h1>
-    <h2 v-else>{{ title }}</h2>
+    <h1 v-if="lvl === 1">
+      <i 
+        :class="icon"
+        aria-hidden="true"
+      ></i>
+      {{ title }}
+    </h1>
+
+    <h2 v-else>
+      <i
+        :class="icon"
+        aria-hidden="true"
+      ></i>
+      {{ title }}
+    </h2>
     
     <p>{{ sub }}</p>
   </hgroup>
 </template>
 
 <style scoped>
-  * {
-    margin: 0;
+  h1 {
+    font-size: 3rem;
   }
 
-  hgroup {
-    margin: 20px;
+  h2 {
+    font-size: 1.5rem;
   }
 </style>
