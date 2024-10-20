@@ -76,6 +76,7 @@
   [type=text] {
     border: 2px solid var(--dark);
     border-radius: var(--md);
+    padding: var(--sm);
   }
 
   [type=submit] {
