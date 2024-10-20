@@ -4,6 +4,23 @@
   defineProps<{
     drugs: string[] | undefined
   }>()
+
+  /**
+   * @method getDrugsLoaded
+   *
+   * @description
+   *  Get the drugs loaded
+   *
+   * @param {string[] | undefined} drugs
+   *  The drugs to get
+   *
+   * @returns {string}
+   *  The text representation of the drugs
+   */
+  const getDrugsText = (drugs: string[] | undefined) : string => {
+
+    return drugs && drugs.some(drug => drug !== '') ? drugs.join(', ') : 'none'
+  }
 </script>
 
 <template>
@@ -14,14 +31,7 @@
       sub="The List of Drugs"
     />
 
-    <ul>
-      <li
-        v-for="drug in drugs"
-        :key="drug"
-      >
-        {{ drug }}
-      </li>
-    </ul>
+    <p>{{ getDrugsText(drugs) }}</p>
   </section>
 </template>
 
