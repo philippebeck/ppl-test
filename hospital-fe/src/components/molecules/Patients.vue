@@ -18,24 +18,18 @@
         v-for="(value, key) in patients"
         :key="key"
       >
-        {{ key }} : {{ value }}
+        {{ key }}:{{ value }}
       </li>
     </ul>
   </section>
 </template>
 
 <style scoped>
-  section {
-    display: inline-block;
-    margin: 20px;
-    border-radius: 20px;
-    padding: 20px;
-    background-color: #FFF;
-    color: #000;
-  }
-
   ul {
     display: flex;
+    gap: var(--md);
     place-content: space-evenly;
+    list-style: none;
+    font-family: var(--monospace);
   }
 </style>
