@@ -31,7 +31,7 @@
 
 <style scoped>
   hgroup {
-    margin-bottom: var(--lg);
+    margin-bottom: var(--md);
   }
 
   h1,

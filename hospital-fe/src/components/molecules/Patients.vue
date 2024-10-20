@@ -18,7 +18,7 @@
         v-for="(value, key) in patients"
         :key="key"
       >
-        {{ key }}:{{ value }}
+        {{ key }} : {{ value }}
       </li>
     </ul>
   </section>
@@ -27,9 +27,9 @@
 <style scoped>
   ul {
     display: flex;
-    gap: var(--md);
-    place-content: space-evenly;
+    flex-flow: column;
     list-style: none;
     font-family: var(--monospace);
+    font-size: 1.1rem;
   }
 </style>
