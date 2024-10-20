@@ -22,6 +22,9 @@
   const drugsList    = ref<string[]>([])
   const results      = ref<{ input: number, output: number }[]>([])
 
+  const previousPatients = ref(patients.value)
+  const previousDrugs    = ref(currentDrugs.value)
+
   /**
    * @method getData
    *
@@ -53,7 +56,7 @@
    * @description
    *  Parses a string of patient states & counts occurrences of each state
    *
-   * @param {string} data
+   * @param {string | undefined} data
    *  A comma-separated string representing patient states
    *
    * @returns {Object}
@@ -185,25 +188,40 @@
    */
   const reportResults = async () : Promise<void> => {
     if (patients.value) {
-      const quarantine   = new Quarantine(patients.value)
 
-      quarantine.setDrugs(currentDrugs.value)
-      quarantine.wait40Days()
+      const isSamePatients: boolean = previousPatients.value === patients.value
+      const isSameDrugs:  boolean   = previousDrugs.value === currentDrugs.value
 
-      const newResult: { [key: string]: { input: number, output: number } } = formatNewResult(patients.value, quarantine.report())
+      if (!isSamePatients && !isSameDrugs) {
 
-      results.value.push(newResult)
+        const quarantine = new Quarantine(patients.value)
 
-      if (currentDrugs.value) drugsList.value.push(currentDrugs.value.slice())
+        quarantine.setDrugs(currentDrugs.value)
+        quarantine.wait40Days()
 
-      truncateResults()
+        const newResult: { [key: string]: { input: number, output: number } } = formatNewResult(patients.value, quarantine.report())
 
-      totalTests.value++
-      resultsLoaded.value = true
+        results.value.push(newResult)
+
+        if (currentDrugs.value) drugsList.value.push(currentDrugs.value.slice())
+
+        truncateResults()
+
+        totalTests.value++
+        resultsLoaded.value = true
+
+        previousPatients.value = patients.value
+        previousDrugs.value    = currentDrugs.value
+
+      } else {
+        alert(
+          'Patients & drugs are the same, cannot create Quarantine: please load new data.'
+        )
+      }
 
     } else {
-      console.error(
-        'Patients data is undefined. Cannot create Quarantine.'
+      alert(
+        'Patients data is undefined, cannot create Quarantine.'
       )
     }
   }
