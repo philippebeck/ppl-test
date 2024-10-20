@@ -13,31 +13,38 @@
       :class="icon"
       aria-hidden="true"
     ></i>
-    {{ label }}
+
+    <b>{{ label }}</b>
   </button>
 </template>
 
 <style scoped>
   button {
-    display: block;
-    margin: auto;
-    border-radius: 8px;
+    display: inline-block;
+    margin: var(--md);
+    border-radius: 50px;
     border: 1px solid transparent;
     padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
+    width: 290px;
+    font-size: 1.2rem;
+    font-family: var(--monospace);
+    background-color: var(--light);
+    color: var(--dark);
     cursor: pointer;
-    transition: border-color 500ms;
+    transition: color 500ms;
 
-    &:hover {
-      border-color: #646cff;
+    i {
+      font-size: 1.5rem;
+      margin-right: 10px;
     }
 
-    &:focus,
-    &:focus-visible {
-      outline: 4px auto -webkit-focus-ring-color;
+    b {
+      vertical-align: top;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--primary);
     }
   }
 </style>

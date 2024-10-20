@@ -30,11 +30,31 @@
 </template>
 
 <style scoped>
+  hgroup {
+    margin-bottom: var(--lg);
+  }
+
+  h1,
+  h2 {
+    font-family: var(--serif);
+  }
+
   h1 {
-    font-size: 3rem;
+    font-size: 2.4rem;
+    text-decoration: underline;
+    color: var(--secondary);
+
+    & + p {
+      font-size: 1.6rem;
+    }
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    color: var(--primary);
+
+    & + p {
+      font-size: 1.2rem;
+    }
   }
 </style>

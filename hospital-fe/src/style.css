@@ -1,41 +1,78 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+/* ********** VARIABLES ********** */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+:root {
+  --sans-serif: Geologica, Helvetica, sans-serif;
+  --serif: Trocchi, Times, serif;
+  --monospace: UbuntuMono, Courier, monospace;
+
+  --primary: #4B0082;   /* Indigo */
+  --secondary: #E6E6FA; /* Lavender */
+  --light: #FFF;        /* White */
+  --dark: #000;         /* Black */
+
+  --sm: 5px;
+  --md: 10px;
+  --lg: 20px;
 }
+
+/* ********** RULES ********** */
+
+@font-face {
+  font-family: Geologica;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("Geologica-Regular"),
+    url("/fonts/Geologica-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Trocchi;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("Trocchi-Regular"),
+    url("/fonts/Trocchi-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: UbuntuMono;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("UbuntuMono-Regular"),
+    url("/fonts/UbuntuMono-Regular.woff2") format("woff2");
+}
+
+/* ********** MAIN ********** */
 
 * {
   margin: 0;
+  padding: 0;
 }
 
 body {
-  padding: 2rem;
+  font-family: var(--sans-serif);
+  line-height: 1.5;
   text-align: center;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  background-color: var(--dark);
+  color: var(--light);
 }
 
 main {
   margin: 0 auto;
+  padding:  var(--lg) var(--md);
 }
 
-ul {
-  display: flex;
-  gap: 10px;
-  padding: 0;
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-
-  &:hover {
-    color: #535bf2;
-  }
+section {
+  display: inline-block;
+  margin: var(--lg) var(--md);
+  border-radius: var(--lg);
+  padding: var(--lg) var(--md);
+  min-width: 200px;
+  background-color: var(--light);
+  color: var(--dark);
 }

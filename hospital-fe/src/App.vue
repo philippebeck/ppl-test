@@ -201,8 +201,17 @@
   <Button
     :action="loadData"
     icon="fa-solid fa-file-medical"
-    label="Load the Patients & the Drugs"
+    label="Load Patients & Drugs"
   />
+
+  <Button
+    v-if="patientsLoaded && drugsLoaded"
+    :action="reportResults"
+    icon="fa-solid fa-user-nurse"
+    label="Dispense the Drugs"
+  />
+
+  <br>
 
   <Patients
     v-if="patientsLoaded"
@@ -214,13 +223,6 @@
     :drugs="drugs"
   />
 
-  <Button
-    v-if="patientsLoaded && drugsLoaded"
-    :action="reportResults"
-    icon="fa-solid fa-user-nurse"
-    label="Dispense the Drugs"
-  />
-  
   <Results
     v-if="resultsLoaded"
     :drugs="drugsList"
@@ -228,5 +230,3 @@
     :total="totalTests"
   />
 </template>
-
-<style scoped></style>

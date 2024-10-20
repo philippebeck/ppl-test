@@ -53,7 +53,7 @@
           aria-hidden="true"
         ></i>
 
-        <i>Drugs given</i>: 
+        <i>Drugs</i>: 
         {{ getDrugsGiven(index) }}
       </caption>
 
@@ -66,8 +66,20 @@
             ></i>
             States
           </th>
-          <th>Before</th>
-          <th>After</th>
+          <th>
+            <i
+              class="fa-solid fa-right-to-bracket"
+              aria-hidden="true"
+            ></i>
+            Before
+          </th>
+          <th>
+            <i
+              class="fa-solid fa-right-from-bracket"
+              aria-hidden="true"
+            ></i>
+            After
+          </th>
         </tr>
       </thead>
 
@@ -87,20 +99,34 @@
 
 <style scoped>
   section {
-    margin: 20px;
-    border-radius: 20px;
-    padding: 20px;
-    background-color: #FFF;
-    color: #000;
+    display: block;
+    margin: auto;
+    width: fit-content;
+    background-color: var(--secondary);
   }
 
   table {
+    display: inline-block;
+    margin: var(--md);
     border-collapse: collapse;
+    width: fit-content;
+    font-family: var(--monospace);
+  }
+
+  th,
+  td {
+    background-color: var(--light);
   }
 
   th {
-    border-collapse: collapse;
     border: 1px solid #000;
+    border-collapse: collapse;
+    padding: var(--sm);
+    font-size: 0.9rem;
+
+    [class*=fa] {
+      display: block;
+    }
   }
 
   td {
@@ -108,17 +134,11 @@
     border: 1px solid #000;
   }
 
-  table {
-    display: inline-block;
-    margin: 20px 50px;
-    width: fit-content;
-  }
-
   caption {
-    padding: 10px;
-  }
+    padding: var(--md);
 
-  th {
-    padding: 10px;
+    [class*=fa] {
+      margin-right: var(--sm);
+    }
   }
 </style>
