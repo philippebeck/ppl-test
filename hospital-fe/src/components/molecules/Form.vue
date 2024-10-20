@@ -25,6 +25,7 @@
         <input
           id="patients"
           type="text"
+          title="Separated by commas"
           :value="manualPatients"
           @input="$emit(
             'update:manualPatients',
@@ -39,6 +40,7 @@
         <input 
           id="drugs"
           type="text"
+          title="Separated by commas"
           :value="manualDrugs"
           @input="$emit(
             'update:manualDrugs',
