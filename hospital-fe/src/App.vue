@@ -17,6 +17,7 @@
   const patientsLoaded = ref<boolean>(false)
   const drugsLoaded    = ref<boolean>(false)
   const resultsLoaded  = ref<boolean>(false)
+  const autoUpdate     = ref<boolean>(false)
 
   const patients     = ref<PatientsRegister | undefined>({})
   const drugs        = ref<string[] | undefined>([])
@@ -188,6 +189,36 @@
       )
     }
   }
+
+  /**
+   * @method toggleAutoUpdate
+   *
+   * @description
+   *  Toggle the auto update
+   *
+   * @returns {void}
+   */
+  const toggleAutoUpdate = () : void => {
+    autoUpdate.value = !autoUpdate.value
+    autoUpdateResults()
+  }
+
+  /**
+   * @method autoUpdateResults
+   *
+   * @description
+   *  Auto update the results
+   *
+   * @returns {Promise<void>}
+   */
+  const autoUpdateResults = async () : Promise<void> => {
+  if (autoUpdate.value) {
+    await loadData()
+    await reportResults()
+    await new Promise(resolve => setTimeout(resolve, 30000))
+    autoUpdateResults()
+  }
+}
 </script>
 
 <template>
@@ -198,20 +229,26 @@
     :lvl="1"
   />
 
-  <Button
-    :action="loadData"
-    icon="fa-solid fa-file-medical"
-    label="Load Patients & Drugs"
-  />
+  <header>
+    <Button
+      :action="toggleAutoUpdate"
+      :icon="autoUpdate ? 'fa-solid fa-sync fa-spin' : 'fa-solid fa-sync'"
+      label="Auto Refresh"
+    />
 
-  <Button
-    v-if="patientsLoaded && drugsLoaded"
-    :action="reportResults"
-    icon="fa-solid fa-user-nurse"
-    label="Dispense the Drugs"
-  />
+    <Button
+      :action="loadData"
+      icon="fa-solid fa-file-medical"
+      label="Load Patients & Drugs"
+    />
 
-  <br>
+    <Button
+      v-if="patientsLoaded && drugsLoaded"
+      :action="reportResults"
+      icon="fa-solid fa-user-nurse"
+      label="Dispense the Drugs"
+    />
+  </header>
 
   <Patients
     v-if="patientsLoaded"
