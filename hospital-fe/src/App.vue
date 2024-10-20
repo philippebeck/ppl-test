@@ -18,10 +18,12 @@
 
   const patients     = ref<PatientsRegister | undefined>({})
   const drugs        = ref<string[] | undefined>([])
-  const currentDrugs = ref<string[] | undefined>([])
+  const currentDrugs = ref<string | undefined>("")
   const drugsList    = ref<string[]>([])
-  const results      = ref<{ [key: string]: { input: number, output: number } }>({})
-  const resultsList  = ref<{ input: number, output: number }[]>([])
+  const results      = ref<{ [key: string]: { input: number, output: number } }[]>([])
+
+  const previousPatients = ref(patients.value)
+  const previousDrugs    = ref(currentDrugs.value)
 
   /**
    * @method getData
@@ -35,11 +37,11 @@
    * @returns {Promise<string | undefined>}
    *  The response data of the request
    */
-  const getData = async (endpoint: string) => {
-    const URL = `http://localhost:7200/${endpoint}`
+  const getData = async (endpoint: string) : Promise<string | undefined> => {
+    const URL: string = `http://localhost:7200/${endpoint}`
 
     try {
-      const response = await axios.get<string>(URL)
+      const response: { data: string } = await axios.get<string>(URL)
 
       return response.data
 
@@ -54,18 +56,21 @@
    * @description
    *  Parses a string of patient states & counts occurrences of each state
    *
-   * @param {string} data
+   * @param {string | undefined} data
    *  A comma-separated string representing patient states
    *
    * @returns {Object}
    *  An object with the counts of each state, initialized with default values
    */
-  const formatPatientsData = (data) => {
+  const formatPatientsData = (data: string | undefined): PatientsRegister | undefined => {
 
     return data
       ?.split(',')
-      .reduce((acc: { [key: string]: number }, current: string) => {
-        const defaultState = { F: 0, H: 0, D: 0, T: 0, X: 0 }
+      .reduce((
+        acc: { [key: string]: number },
+        current: string
+      ) => {
+        const defaultState: { [key: string]: number } = { F: 0, H: 0, D: 0, T: 0, X: 0 }
 
         acc = { ...defaultState, ...acc }
         acc[current] = (acc[current] || 0) + 1
@@ -82,8 +87,8 @@
    *
    * @returns {Promise<void>}
    */
-  const loadPatients = async () => {
-    const data = await getData("patients")
+  const loadPatients = async () : Promise<void> => {
+    const data: string | undefined = await getData("patients")
 
     patients.value       = formatPatientsData(data)
     patientsLoaded.value = true
@@ -97,8 +102,8 @@
    *
    * @returns {Promise<void>}
    */
-  const loadDrugs = async () => {
-    const data = await getData('drugs')
+  const loadDrugs = async () : Promise<void> => {
+    const data: string | undefined = await getData('drugs')
 
     currentDrugs.value = data
     drugs.value = data?.split(',')
@@ -114,7 +119,7 @@
    *
    * @returns {Promise<void>}
    */
-  const loadData = async () => {
+  const loadData = async () : Promise<void> => {
     await loadPatients()
     await loadDrugs()
   }
@@ -139,11 +144,14 @@
   const formatNewResult = (
     input: PatientsRegister,
     output: PatientsRegister
-  ) => {
+  ) : { [key: string]: { input: number, output: number } } => {
 
     return Object
       .keys(input)
-      .reduce((acc, key) => {
+      .reduce((
+        acc: { [key: string]: { input: number, output: number } },
+        key: string
+      ) => {
 
         acc[key] = {
           input: input[key],
@@ -154,16 +162,42 @@
       }, {})
   }
 
+  /**
+   * @method updateResults
+   *
+   * @description
+   *  Add the result to the results list
+   *
+   * @param {{ [key: string]: { input: number, output: number } }} newResult
+   *  The result to add
+   */
+  const updateResults = (
+    newResult: {
+      [key: string]: {
+        input: number,
+        output: number
+      }
+    }) : void => {
+
+    results.value.push(newResult)
+
+    if (currentDrugs.value) {
+      drugsList.value.push(currentDrugs.value.slice())
+    }
+  }
+
 /**
  * @method truncateResults
  *
  * @description
  *  Truncate the results list if its length exceeds 10 by removing the oldest result
  *  from both the results list & the corresponding drugs list
+ *
+ * @returns {void}
  */
-  const truncateResults = () => {
-    if (resultsList.value.length > 10) {
-      resultsList.value.shift()
+  const truncateResults = () : void => {
+    if (results.value.length > 10) {
+      results.value.shift()
       drugsList.value.shift()
     }
   }
@@ -176,26 +210,39 @@
    *
    * @returns {Promise<void>}
    */
-  const reportResults = async () => {
+  const reportResults = async () : Promise<void> => {
     if (patients.value) {
-      const quarantine   = new Quarantine(patients.value)
 
-      quarantine.setDrugs(currentDrugs.value)
-      quarantine.wait40Days()
+      const isSamePatients: boolean = previousPatients.value === patients.value
+      const isSameDrugs:  boolean   = previousDrugs.value === currentDrugs.value
 
-      const newResult = formatNewResult(patients.value, quarantine.report())
+      if (!isSamePatients || !isSameDrugs) {
+        const quarantine = new Quarantine(patients.value)
 
-      resultsList.value.push(newResult)
-      drugsList.value.push(currentDrugs.value.slice())
+        quarantine.setDrugs((currentDrugs.value ?? '')?.split(','))
+        quarantine.wait40Days()
 
-      truncateResults()
+        const newResult: { [key: string]: { input: number, output: number } } =
+          formatNewResult(patients.value, quarantine.report())
 
-      totalTests.value++
-      resultsLoaded.value = true
+        updateResults(newResult)
+        truncateResults()
+
+        totalTests.value++
+        resultsLoaded.value = true
+
+        previousPatients.value = patients.value
+        previousDrugs.value    = currentDrugs.value
+
+      } else {
+        alert(
+          'Patients & drugs are the same, cannot create Quarantine: please load new data.'
+        )
+      }
 
     } else {
-      console.error(
-        'Patients data is undefined. Cannot create Quarantine.'
+      alert(
+        'Patients data is undefined, cannot create Quarantine.'
       )
     }
   }
@@ -235,7 +282,7 @@
   <Results
     v-if="resultsLoaded"
     :drugs="drugsList"
-    :results="resultsList"
+    :results="results"
     :total="totalTests"
   />
 </template>

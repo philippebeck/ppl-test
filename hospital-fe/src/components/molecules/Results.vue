@@ -1,13 +1,15 @@
 <script setup lang="ts">
-  import { PatientsRegister } from 'hospital-lib'
   import Title from '../atoms/Title.vue'
 
   const props = defineProps<{
-    drugs: string[] | undefined,
+    drugs: string[],
     results: {
-      input: number,
-      output: number
+      [key: string]: {
+        input: number,
+        output: number
+      }
     }[],
+
     total: number
   }>()
 
@@ -23,8 +25,8 @@
    * @returns {string}
    *  The drugs that were given to the patients at the given index
    */
-  const getDrugsGiven = (index: number) => {
-    const drugsGiven = props.drugs[props.results.length - index - 1]
+  const getDrugsGiven = (index: number) : string => {
+    const drugsGiven: string = props.drugs[props.results.length - index - 1]
 
     return drugsGiven ? drugsGiven : 'none'
   }
