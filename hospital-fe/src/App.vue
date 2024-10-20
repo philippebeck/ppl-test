@@ -245,6 +245,8 @@
    * @returns {Promise<void>}
    */
   const handleManualInput = async () : Promise<void> => {
+    // TODO: add checking for different datasets
+    // TODO: add checking for invalid inputs
     manualPatients.value = cleanValue(manualPatients.value)
     manualDrugs.value    = cleanValue(manualDrugs.value)
 
