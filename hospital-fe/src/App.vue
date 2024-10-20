@@ -192,7 +192,7 @@
       const isSamePatients: boolean = previousPatients.value === patients.value
       const isSameDrugs:  boolean   = previousDrugs.value === currentDrugs.value
 
-      if (!isSamePatients && !isSameDrugs) {
+      if (!isSamePatients || !isSameDrugs) {
 
         const quarantine = new Quarantine(patients.value)
 
