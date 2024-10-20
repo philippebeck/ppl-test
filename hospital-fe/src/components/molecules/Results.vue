@@ -1,15 +1,10 @@
 <script setup lang="ts">
+  import { Result } from '../../Result'
   import Title from '../atoms/Title.vue'
 
   const props = defineProps<{
     drugs: string[],
-    results: {
-      [key: string]: {
-        input: number,
-        output: number
-      }
-    }[],
-
+    results: Result[],
     total: number
   }>()
 
