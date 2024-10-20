@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import axios from 'axios'
   import { PatientsRegister } from 'hospital-lib'
   // TODO: import the Quarantine class from the dist folder
   import { Quarantine } from 'hospital-lib/src/quarantine'
+
+  import { Result } from './Result'
+  import { getData, truncateData } from './services'
 
   import Title from './components/atoms/Title.vue'
   import Button from './components/atoms/Button.vue'
@@ -20,35 +22,10 @@
   const drugs        = ref<string[] | undefined>([])
   const currentDrugs = ref<string | undefined>("")
   const drugsList    = ref<string[]>([])
-  const results      = ref<{ [key: string]: { input: number, output: number } }[]>([])
+  const results      = ref<Result[]>([])
 
   const previousPatients = ref(patients.value)
   const previousDrugs    = ref(currentDrugs.value)
-
-  /**
-   * @method getData
-   *
-   * @description
-   *  Make a GET request to the given endpoint & return the response data
-   *
-   * @param {string} endpoint
-   *  The endpoint to make the request to
-   *
-   * @returns {Promise<string | undefined>}
-   *  The response data of the request
-   */
-  const getData = async (endpoint: string) : Promise<string | undefined> => {
-    const URL: string = `http://localhost:7200/${endpoint}`
-
-    try {
-      const response: { data: string } = await axios.get<string>(URL)
-
-      return response.data
-
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
   /**
    * @method formatPatientsData
@@ -66,12 +43,8 @@
 
     return data
       ?.split(',')
-      .reduce((
-        acc: { [key: string]: number },
-        current: string
-      ) => {
-        const defaultState: { [key: string]: number } = { F: 0, H: 0, D: 0, T: 0, X: 0 }
-
+      .reduce((acc: PatientsRegister, current: string) => {
+        const defaultState: PatientsRegister = { F: 0, H: 0, D: 0, T: 0, X: 0 }
         acc = { ...defaultState, ...acc }
         acc[current] = (acc[current] || 0) + 1
 
@@ -90,7 +63,7 @@
   const loadPatients = async () : Promise<void> => {
     const data: string | undefined = await getData("patients")
 
-    patients.value       = formatPatientsData(data)
+    patients.value = formatPatientsData(data)
     patientsLoaded.value = true
   }
 
@@ -136,23 +109,16 @@
    * @param {PatientsRegister} output
    *  The output states of the patients
    *
-   * @returns {Object}
+   * @returns {Result}
    *  An object with each key being a patient state & each value being an object with
    *  input & output properties, which are the counts of the state in the input &
    *  output states, respectively
    */
-  const formatNewResult = (
-    input: PatientsRegister,
-    output: PatientsRegister
-  ) : { [key: string]: { input: number, output: number } } => {
+  const formatNewResult = (input: PatientsRegister, output: PatientsRegister) : Result => {
 
     return Object
       .keys(input)
-      .reduce((
-        acc: { [key: string]: { input: number, output: number } },
-        key: string
-      ) => {
-
+      .reduce((acc: Result, key: string) => {
         acc[key] = {
           input: input[key],
           output: output[key]
@@ -168,37 +134,14 @@
    * @description
    *  Add the result to the results list
    *
-   * @param {{ [key: string]: { input: number, output: number } }} newResult
+   * @param {Result} newResult
    *  The result to add
    */
-  const updateResults = (
-    newResult: {
-      [key: string]: {
-        input: number,
-        output: number
-      }
-    }) : void => {
-
+  const updateResults = (newResult: Result) : void => {
     results.value.push(newResult)
 
     if (currentDrugs.value) {
       drugsList.value.push(currentDrugs.value.slice())
-    }
-  }
-
-/**
- * @method truncateResults
- *
- * @description
- *  Truncate the results list if its length exceeds 10 by removing the oldest result
- *  from both the results list & the corresponding drugs list
- *
- * @returns {void}
- */
-  const truncateResults = () : void => {
-    if (results.value.length > 10) {
-      results.value.shift()
-      drugsList.value.shift()
     }
   }
 
@@ -222,11 +165,10 @@
         quarantine.setDrugs((currentDrugs.value ?? '')?.split(','))
         quarantine.wait40Days()
 
-        const newResult: { [key: string]: { input: number, output: number } } =
-          formatNewResult(patients.value, quarantine.report())
+        const newResult: Result = formatNewResult(patients.value, quarantine.report())
 
         updateResults(newResult)
-        truncateResults()
+        truncateData(results.value, drugsList.value)
 
         totalTests.value++
         resultsLoaded.value = true
