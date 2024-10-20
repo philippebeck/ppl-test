@@ -162,6 +162,30 @@
       }, {})
   }
 
+  /**
+   * @method updateResults
+   *
+   * @description
+   *  Add the result to the results list
+   *
+   * @param {{ [key: string]: { input: number, output: number } }} newResult
+   *  The result to add
+   */
+  const updateResults = (
+    newResult: {
+      [key: string]: {
+        input: number,
+        output: number
+      }
+    }) : void => {
+
+    results.value.push(newResult)
+
+    if (currentDrugs.value) {
+      drugsList.value.push(currentDrugs.value.slice())
+    }
+  }
+
 /**
  * @method truncateResults
  *
