@@ -36,5 +36,6 @@
 <style scoped>
   p {
     font-family: var(--monospace);
+    font-size: 1.1rem;
   }
 </style>

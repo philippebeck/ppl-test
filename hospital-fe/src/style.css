@@ -71,8 +71,9 @@ section {
   display: inline-block;
   margin: var(--lg) var(--md);
   border-radius: var(--lg);
-  padding: var(--lg) var(--md);
+  padding: var(--md);
   min-width: 200px;
+  min-height: 220px;
   background-color: var(--light);
   color: var(--dark);
 }

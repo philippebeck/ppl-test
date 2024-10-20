@@ -102,6 +102,7 @@ yarn start
 
 ## Branches
 
-- **main** => the production branch *(the same as the dev branch after completion of the code process)*  
+- **main** => the production branch *(the same as the dev + ext branches after completion of the code process)*  
 - **dev**  => the development branch with all steps of the code process, notably the quarantine class, the rules constantes & the new   
 - **lib-test** => the test branch of the library with an additional patient state, an additional drug & new tests for them  
+- **ext** => the extension branch of the frontend with 2 additional features *(auto refresh & manual input)*  

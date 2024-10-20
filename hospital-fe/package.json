@@ -1,6 +1,6 @@
 {
   "name": "hospital-fe",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Hospital frontend - The frontend of the simulation of disease in a group of patients",
   "type": "module",
   "keywords": [

@@ -2,6 +2,23 @@ import axios from 'axios'
 import { Result } from './Result'
 
 /**
+ * @function cleanValue
+ *
+ * @description
+ *  Clean the value
+ *
+ * @param {string} value
+ *  The value to clean
+ *
+ * @returns {string}
+ *  The cleaned value
+ */
+export const cleanValue = (value: string) : string => {
+
+  return value.trim().replace(/\s*,\s*/g, ',')
+}
+
+/**
  * @function getData
  *
  * @description

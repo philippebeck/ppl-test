@@ -25,7 +25,7 @@
     border-radius: 50px;
     border: 1px solid transparent;
     padding: 0.6em 1.2em;
-    width: 290px;
+    width: 220px;
     font-size: 1.2rem;
     font-family: var(--monospace);
     background-color: var(--light);
@@ -43,7 +43,8 @@
     }
 
     &:hover,
-    &:focus {
+    &:focus,
+    .active {
       color: var(--primary);
     }
   }
