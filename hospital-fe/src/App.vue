@@ -212,13 +212,40 @@
    * @returns {Promise<void>}
    */
   const autoUpdateResults = async () : Promise<void> => {
-  if (autoUpdate.value) {
-    await loadData()
-    await reportResults()
-    await new Promise(resolve => setTimeout(resolve, 30000))
-    autoUpdateResults()
+    if (autoUpdate.value) {
+      await loadData()
+      await reportResults()
+      await new Promise(resolve => setTimeout(resolve, 30000))
+      autoUpdateResults()
+    }
   }
-}
+
+  /**
+   * @method toggleForm
+   *
+   * @description
+   *  Toggle the form
+   *
+   * @returns {void}
+   */
+  const toggleForm = () : void => {
+    showForm.value = !showForm.value
+  }
+
+  /**
+   * @method handleSubmitManualInput
+   *
+   * @description
+   *  Handle the manual input
+   *
+   * @returns {Promise<void>}
+   */
+  const handleManualInput = async () : Promise<void> => {
+    patients.value = formatPatientsData(manualPatients.value)
+    currentDrugs.value = manualDrugs.value
+
+    await reportResults()
+  }
 </script>
 
 <template>
