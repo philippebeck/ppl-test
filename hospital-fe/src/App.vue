@@ -1,9 +1,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { PatientsRegister } from 'hospital-lib'
-  // TODO: import the Quarantine class from the dist folder
+  // TODO: import the Quarantine class from the package
   import { Quarantine } from 'hospital-lib/src/quarantine'
-
   import { Result } from './Result'
   import { getData, truncateData } from './services'
 
@@ -11,13 +10,18 @@
   import Button from './components/atoms/Button.vue'
   import Patients from './components/molecules/Patients.vue'
   import Drugs from './components/molecules/Drugs.vue'
+  import Form from './components/molecules/Form.vue'
   import Results from './components/molecules/Results.vue'
 
   const totalTests     = ref<number>(0)
+  const manualPatients = ref<string>('')
+  const manualDrugs    = ref<string>('')
+
   const patientsLoaded = ref<boolean>(false)
   const drugsLoaded    = ref<boolean>(false)
   const resultsLoaded  = ref<boolean>(false)
   const autoUpdate     = ref<boolean>(false)
+  const showForm       = ref<boolean>(false)
 
   const patients     = ref<PatientsRegister | undefined>({})
   const drugs        = ref<string[] | undefined>([])
@@ -258,33 +262,48 @@
 
   <header>
     <Button
-      :action="toggleAutoUpdate"
-      :icon="autoUpdate ? 'fa-solid fa-sync fa-spin' : 'fa-solid fa-sync'"
-      label="Auto Refresh"
-    />
-
-    <Button
       :action="loadData"
       icon="fa-solid fa-file-medical"
-      label="Load Patients & Drugs"
+      label="Load Data"
     />
 
     <Button
       v-if="patientsLoaded && drugsLoaded"
       :action="reportResults"
       icon="fa-solid fa-user-nurse"
-      label="Dispense the Drugs"
+      label="Dispense Drugs"
+    />
+
+    <Button
+      :action="toggleAutoUpdate"
+      :icon="autoUpdate ? 'fa-solid fa-sync fa-spin active' : 'fa-solid fa-sync'"
+      label="Auto Refresh"
+    />
+
+    <Button
+      :action="toggleForm"
+      :icon="showForm ? 'fa-solid fa-pen-to-square active' : 'fa-solid fa-pen-to-square'"
+      label="Manual Input"
     />
   </header>
 
   <Patients
-    v-if="patientsLoaded"
+    v-if="patientsLoaded && !showForm"
     :patients="patients"
   />
 
   <Drugs
-    v-if="drugsLoaded"
+    v-if="drugsLoaded && !showForm"
     :drugs="drugs"
+  />
+
+  <Form
+    v-if="showForm"
+    :handleSubmitManualInput="handleManualInput"
+    :manualPatients="manualPatients"
+    :manualDrugs="manualDrugs"
+    @update:manualPatients="manualPatients = $event"
+    @update:manualDrugs="manualDrugs = $event"
   />
 
   <Results
@@ -294,3 +313,16 @@
     :total="totalTests"
   />
 </template>
+
+<style scoped>
+  header {
+    display: flex;
+    flex-flow: column;
+    place-items: center;
+
+    @media (min-width: 576px) {
+      flex-flow: row wrap;
+      place-content: center;
+    }
+  }
+</style>
