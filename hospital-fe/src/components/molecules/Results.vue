@@ -2,11 +2,14 @@
   import Title from '../atoms/Title.vue'
 
   const props = defineProps<{
-    drugs: string[] | undefined,
+    drugs: string[],
     results: {
-      input: number,
-      output: number
+      [key: string]: {
+        input: number,
+        output: number
+      }
     }[],
+
     total: number
   }>()
 

@@ -20,7 +20,7 @@
   const drugs        = ref<string[] | undefined>([])
   const currentDrugs = ref<string | undefined>("")
   const drugsList    = ref<string[]>([])
-  const results      = ref<{ input: number, output: number }[]>([])
+  const results      = ref<{ [key: string]: { input: number, output: number } }[]>([])
 
   const previousPatients = ref(patients.value)
   const previousDrugs    = ref(currentDrugs.value)
@@ -62,7 +62,7 @@
    * @returns {Object}
    *  An object with the counts of each state, initialized with default values
    */
-  const formatPatientsData = (data: string | undefined) => {
+  const formatPatientsData = (data: string | undefined): PatientsRegister | undefined => {
 
     return data
       ?.split(',')
@@ -217,18 +217,15 @@
       const isSameDrugs:  boolean   = previousDrugs.value === currentDrugs.value
 
       if (!isSamePatients || !isSameDrugs) {
-
         const quarantine = new Quarantine(patients.value)
 
-        quarantine.setDrugs(currentDrugs.value)
+        quarantine.setDrugs((currentDrugs.value ?? '')?.split(','))
         quarantine.wait40Days()
 
-        const newResult: { [key: string]: { input: number, output: number } } = formatNewResult(patients.value, quarantine.report())
+        const newResult: { [key: string]: { input: number, output: number } } =
+          formatNewResult(patients.value, quarantine.report())
 
-        results.value.push(newResult)
-
-        if (currentDrugs.value) drugsList.value.push(currentDrugs.value.slice())
-
+        updateResults(newResult)
         truncateResults()
 
         totalTests.value++
