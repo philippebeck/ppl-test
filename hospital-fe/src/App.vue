@@ -183,7 +183,7 @@
 
       } else {
         alert(
-          'Patients & drugs are the same, cannot create Quarantine: please load new data.'
+          'Patients & drugs are the same: please load new data.'
         )
       }
 
