@@ -4,7 +4,7 @@
   // TODO: import the Quarantine class from the package
   import { Quarantine } from 'hospital-lib/src/quarantine'
   import { Result } from './Result'
-  import { getData, truncateData } from './services'
+  import { cleanValue, getData, truncateData } from './services'
 
   import Title from './components/atoms/Title.vue'
   import Button from './components/atoms/Button.vue'
@@ -245,7 +245,10 @@
    * @returns {Promise<void>}
    */
   const handleManualInput = async () : Promise<void> => {
-    patients.value = formatPatientsData(manualPatients.value)
+    manualPatients.value = cleanValue(manualPatients.value)
+    manualDrugs.value    = cleanValue(manualDrugs.value)
+
+    patients.value     = formatPatientsData(manualPatients.value)
     currentDrugs.value = manualDrugs.value
 
     await reportResults()
