@@ -3,11 +3,11 @@
 
   defineProps<{
     handleSubmitManualInput: () => void,
-    manualPatients: string,
-    manualDrugs: string
+    inputPatients: string,
+    inputDrugs: string
   }>()
 
-  defineEmits(['update:manualPatients', 'update:manualDrugs'])
+  defineEmits(['update:inputPatients', 'update:inputDrugs'])
 </script>
 
 <template>
@@ -26,9 +26,9 @@
           id="patients"
           type="text"
           title="Separated by commas"
-          :value="manualPatients"
+          :value="inputPatients"
           @input="$emit(
-            'update:manualPatients',
+            'update:inputPatients',
             ($event.target as HTMLInputElement).value
           )"
         >
@@ -41,9 +41,9 @@
           id="drugs"
           type="text"
           title="Separated by commas"
-          :value="manualDrugs"
+          :value="inputDrugs"
           @input="$emit(
-            'update:manualDrugs',
+            'update:inputDrugs',
             ($event.target as HTMLInputElement).value
           )"
         >
@@ -92,7 +92,7 @@
     font-weight: bold;
     background-color: var(--primary);
     color: var(--light);
-    cursor: pointer;
+    cursor: crosshair;
 
     &:hover,
     &:focus {

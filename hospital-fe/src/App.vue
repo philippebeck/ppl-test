@@ -1,11 +1,27 @@
 <script setup lang="ts">
   import { ref } from 'vue'
+  import swal from 'sweetalert'
   import { PatientsRegister } from 'hospital-lib'
-  // TODO: import the Quarantine class from the package
   import { Quarantine } from 'hospital-lib/src/quarantine'
-  import { Result } from './Result'
-  import { patientBase, initPatientBase, drugBase } from './data'
-  import { cleanValue, getData, truncateData } from './services'
+  import { Result } from './assets/Result'
+
+  import {
+    ERROR,
+    EMPTY_INPUT_PATIENTS,
+    SAME_INPUT_DATA,
+    SAME_LOADED_DATA,
+    UNDEFINED_DATA
+  } from './assets/data'
+
+  import {
+    checkValidData,
+    cleanArrayLength,
+    cleanInput,
+    cleanValue,
+    formatPatients,
+    formatResults,
+    getData
+  } from './assets/services'
 
   import Title from './components/atoms/Title.vue'
   import Button from './components/atoms/Button.vue'
@@ -14,15 +30,17 @@
   import Form from './components/molecules/Form.vue'
   import Results from './components/molecules/Results.vue'
 
-  const totalTests     = ref<number>(0)
-  const manualPatients = ref<string>('')
-  const manualDrugs    = ref<string>('')
+  // ********** CONSTANTS **********
 
-  const patientsLoaded = ref<boolean>(false)
-  const drugsLoaded    = ref<boolean>(false)
-  const resultsLoaded  = ref<boolean>(false)
-  const autoUpdate     = ref<boolean>(false)
-  const showForm       = ref<boolean>(false)
+  const countedTests  = ref<number>(0)
+  const inputPatients = ref<string>('')
+  const inputDrugs    = ref<string>('')
+
+  const isPatientsLoaded = ref<boolean>(false)
+  const isDrugsLoaded    = ref<boolean>(false)
+  const isResultsLoaded  = ref<boolean>(false)
+  const isAutoUpdated    = ref<boolean>(false)
+  const isFormShown      = ref<boolean>(false)
 
   const patients     = ref<PatientsRegister | undefined>({})
   const drugs        = ref<string | undefined>("")
@@ -32,30 +50,7 @@
   const previousPatients = ref(patients.value)
   const previousDrugs    = ref(drugs.value)
 
-  /**
-   * @method formatPatientsData
-   *
-   * @description
-   *  Parses a string of patient states & counts occurrences of each state
-   *
-   * @param {string | undefined} data
-   *  A comma-separated string representing patient states
-   *
-   * @returns {Object}
-   *  An object with the counts of each state, initialized with default values
-   */
-  const formatPatientsData = (data: string | undefined): PatientsRegister | undefined => {
-
-    return data
-      ?.split(',')
-      .reduce((acc: PatientsRegister, current: string) => {
-        const defaultState: PatientsRegister = initPatientBase
-        acc = { ...defaultState, ...acc }
-        acc[current] = (acc[current] || 0) + 1
-
-        return acc
-      }, {})
-  }
+  // ********** LOADERS **********
 
   /**
    * @method loadPatients
@@ -68,8 +63,8 @@
   const loadPatients = async () : Promise<void> => {
     const data: string | undefined = await getData("patients")
 
-    patients.value = formatPatientsData(data)
-    patientsLoaded.value = true
+    patients.value = formatPatients(data)
+    isPatientsLoaded.value = true
   }
 
   /**
@@ -83,7 +78,7 @@
   const loadDrugs = async () : Promise<void> => {
     drugs.value = await getData('drugs')
 
-    drugsLoaded.value = true
+    isDrugsLoaded.value = true
   }
 
   /**
@@ -99,36 +94,7 @@
     await loadDrugs()
   }
 
-  /**
-   * @method formatNewResult
-   *
-   * @description
-   *  Format the results of a quarantine simulation
-   *
-   * @param {PatientsRegister} input
-   *  The input states of the patients
-   *
-   * @param {PatientsRegister} output
-   *  The output states of the patients
-   *
-   * @returns {Result}
-   *  An object with each key being a patient state & each value being an object with
-   *  input & output properties, which are the counts of the state in the input &
-   *  output states, respectively
-   */
-  const formatNewResult = (input: PatientsRegister, output: PatientsRegister) : Result => {
-
-    return Object
-      .keys(input)
-      .reduce((acc: Result, key: string) => {
-        acc[key] = {
-          input: input[key],
-          output: output[key]
-        }
-
-        return acc
-      }, {})
-  }
+  // ********** RESULTS **********
 
   /**
    * @method updateResults
@@ -169,42 +135,27 @@
         quarantine.setDrugs((drugs.value ?? '')?.split(','))
         quarantine.wait40Days()
 
-        const newResult: Result = formatNewResult(patients.value, quarantine.report())
+        const newResult: Result = formatResults(patients.value, quarantine.report())
 
         updateResults(newResult)
-        truncateData(results.value, drugsList.value)
+        cleanArrayLength(results.value, drugsList.value)
 
-        totalTests.value++
-        resultsLoaded.value = true
+        countedTests.value++
+        isResultsLoaded.value = true
 
         previousPatients.value = patients.value
         previousDrugs.value    = drugs.value
 
       } else {
-        alert(
-          'Patients & drugs are the same: please load new data.'
-        )
+        swal(ERROR, SAME_LOADED_DATA, "error")
       }
 
     } else {
-      alert(
-        'Patients data is undefined, cannot create Quarantine.'
-      )
+      swal(ERROR, UNDEFINED_DATA, "error")
     }
   }
 
-  /**
-   * @method toggleAutoUpdate
-   *
-   * @description
-   *  Toggle the auto update
-   *
-   * @returns {void}
-   */
-  const toggleAutoUpdate = () : void => {
-    autoUpdate.value = !autoUpdate.value
-    autoUpdateResults()
-  }
+  // ********** AUTO UPDATE **********
 
   /**
    * @method autoUpdateResults
@@ -215,7 +166,7 @@
    * @returns {Promise<void>}
    */
   const autoUpdateResults = async () : Promise<void> => {
-    if (autoUpdate.value) {
+    if (isAutoUpdated.value) {
 
       await loadData()
       await reportResults()
@@ -225,95 +176,7 @@
     }
   }
 
-  /**
-   * @method toggleForm
-   *
-   * @description
-   *  Toggle the form
-   *
-   * @returns {void}
-   */
-  const toggleForm = () : void => {
-    showForm.value = !showForm.value
-  }
-
-/**
- * @method checkManualDrugs
- * 
- * @description
- *  Check if the manual drugs are valid
- * 
- * @returns {void}
- */
-  const checkManualDrugs = () : void => {
-    if (manualDrugs.value) {
-      manualDrugs.value = cleanValue(manualDrugs.value)
-    } else {
-      manualDrugs.value = ''
-    }
-  }
-
-  /**
-   * @method isValidPatient
-   *
-   * @description
-   *  Check if the patient is valid
-   *
-   * @param {string} patient
-   *  The patient to check
-   *
-   * @returns {boolean}
-   *  True if the patient is valid, false otherwise
-   */
-  const isValidPatient = (patient: string) : boolean => {
-
-    return patientBase.includes(patient)
-  }
-
-  /**
-   * @method isValidDrug
-   *
-   * @description
-   *  Check if the drug is valid
-   *
-   * @param {string} drug
-   *  The drug to check
-   *
-   * @returns {boolean}
-   *  True if the drug is valid, false otherwise
-   */
-  const isValidDrug = (drug: string) : boolean => {
-
-    return drugBase.includes(drug)
-  }
-
-  /**
-   * @method isValidData
-   *
-   * @description
-   *  Check if the data is valid
-   *
-   * @returns {boolean}
-   *  True if the data is valid, false otherwise
-   */
-  const isValidData = () : boolean => {
-    const patientsArray: string[] = manualPatients.value.split(',')
-    const drugsArray: string[]    = manualDrugs.value.split(',')
-
-    if (!patientsArray.every(isValidPatient)) {
-      alert('Error: one or more patients are invalid.')
-
-      return false
-    }
-
-    if (!drugsArray.every(isValidDrug)) {
-      alert('Error: one or more drugs are invalid.')
-
-      return false
-    }
-
-    return true
-  }
+  // ********** MANUAL INPUT **********
 
   /**
    * @method validManualInput
@@ -324,8 +187,8 @@
    * @returns {Promise<void>}
    */
   const validManualInput = async (): Promise<void> => {
-    patients.value = formatPatientsData(manualPatients.value)
-    drugs.value    = manualDrugs.value
+    patients.value = formatPatients(inputPatients.value)
+    drugs.value    = inputDrugs.value
 
     await reportResults()
   }
@@ -340,13 +203,13 @@
    */
   const checkSameManualInput = () : void => {
     const formatPreviousPatients: string = JSON.stringify(previousPatients.value)
-    const formatManualPatients: string   = JSON.stringify(formatPatientsData(manualPatients.value))
+    const formatManualPatients: string   = JSON.stringify(formatPatients(inputPatients.value))
 
     const isSamePatients: boolean = formatPreviousPatients === formatManualPatients
-    const isSameDrugs: boolean    = previousDrugs.value === manualDrugs.value
+    const isSameDrugs: boolean    = previousDrugs.value === inputDrugs.value
 
     if (!isSamePatients || !isSameDrugs) validManualInput()
-    else alert('Patients & drugs are the same: please type new data.')
+    else swal(ERROR, SAME_INPUT_DATA, "error")
   }
 
   /**
@@ -359,17 +222,42 @@
    */
   const handleManualInput = async () : Promise<void> => {
 
-    if (manualPatients.value) {
-      manualPatients.value = cleanValue(manualPatients.value)
+    if (inputPatients.value) {
+      inputPatients.value = cleanValue(inputPatients.value)
+      inputDrugs.value    = cleanInput(inputDrugs.value)
 
-      checkManualDrugs()
-
-      if (isValidData()) checkSameManualInput()
+      if (checkValidData(inputPatients.value, inputDrugs.value)) {
+        checkSameManualInput()
+      }
 
     } else {
-      alert('Error: please type patients.')
+      swal(ERROR, EMPTY_INPUT_PATIENTS, "error")
     }
   }
+
+  // ********** TOGGLER **********
+
+  /**
+   * @method toggle
+   *
+   * @description
+   *  Toggle the form or the auto update
+   *
+   * @param {string} type
+   *  The type of the element
+   *
+   * @returns {void}
+   */
+  const toggle = (type: 'form' | 'autoUpdate') : void => {
+
+  if (type === 'form') {
+    isFormShown.value = !isFormShown.value
+
+  } else if (type === 'autoUpdate') {
+    isAutoUpdated.value = !isAutoUpdated.value
+    autoUpdateResults()
+  }
+}
 </script>
 
 <template>
@@ -388,49 +276,51 @@
     />
 
     <Button
-      v-if="patientsLoaded && drugsLoaded"
+      v-if="isPatientsLoaded && isDrugsLoaded"
       :action="reportResults"
       icon="fa-solid fa-user-nurse"
       label="Dispense Drugs"
     />
 
     <Button
-      :action="toggleAutoUpdate"
-      :icon="autoUpdate ? 'fa-solid fa-sync fa-spin active' : 'fa-solid fa-sync'"
+      :action="() => toggle('autoUpdate')"
+      :class="isAutoUpdated ? 'active' : ''"
+      :icon="isAutoUpdated ? 'fa-solid fa-sync fa-spin' : 'fa-solid fa-sync'"
       label="Auto Refresh"
     />
 
     <Button
-      :action="toggleForm"
-      :icon="showForm ? 'fa-solid fa-pen-to-square active' : 'fa-solid fa-pen-to-square'"
+      :action="() => toggle('form')"
+      :class="isFormShown ? 'active' : ''"
+      :icon="isFormShown ? 'fa-regular fa-pen-to-square' : 'fa-solid fa-pen-to-square'"
       label="Manual Input"
     />
   </header>
 
   <Patients
-    v-if="patientsLoaded && !showForm"
+    v-if="isPatientsLoaded && !isFormShown"
     :patients="patients"
   />
 
   <Drugs
-    v-if="drugsLoaded && !showForm"
+    v-if="isDrugsLoaded && !isFormShown"
     :drugs="drugs"
   />
 
   <Form
-    v-if="showForm"
+    v-if="isFormShown"
     :handleSubmitManualInput="handleManualInput"
-    :manualPatients="manualPatients"
-    :manualDrugs="manualDrugs"
-    @update:manualPatients="manualPatients = $event"
-    @update:manualDrugs="manualDrugs = $event"
+    :inputPatients="inputPatients"
+    :inputDrugs="inputDrugs"
+    @update:inputPatients="inputPatients = $event"
+    @update:inputDrugs="inputDrugs = $event"
   />
 
   <Results
-    v-if="resultsLoaded"
+    v-if="isResultsLoaded"
     :drugs="drugsList"
     :results="results"
-    :total="totalTests"
+    :total="countedTests"
   />
 </template>
 
