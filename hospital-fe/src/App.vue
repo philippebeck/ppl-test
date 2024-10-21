@@ -30,15 +30,15 @@
 
   // ********** CONSTANTS **********
 
-  const totalTests     = ref<number>(0)
-  const manualPatients = ref<string>('')
-  const manualDrugs    = ref<string>('')
+  const countedTests  = ref<number>(0)
+  const inputPatients = ref<string>('')
+  const inputDrugs    = ref<string>('')
 
-  const patientsLoaded = ref<boolean>(false)
-  const drugsLoaded    = ref<boolean>(false)
-  const resultsLoaded  = ref<boolean>(false)
-  const autoUpdate     = ref<boolean>(false)
-  const showForm       = ref<boolean>(false)
+  const isPatientsLoaded = ref<boolean>(false)
+  const isDrugsLoaded    = ref<boolean>(false)
+  const isResultsLoaded  = ref<boolean>(false)
+  const isAutoUpdated    = ref<boolean>(false)
+  const isFormShown      = ref<boolean>(false)
 
   const patients     = ref<PatientsRegister | undefined>({})
   const drugs        = ref<string | undefined>("")
@@ -62,7 +62,7 @@
     const data: string | undefined = await getData("patients")
 
     patients.value = formatPatients(data)
-    patientsLoaded.value = true
+    isPatientsLoaded.value = true
   }
 
   /**
@@ -76,7 +76,7 @@
   const loadDrugs = async () : Promise<void> => {
     drugs.value = await getData('drugs')
 
-    drugsLoaded.value = true
+    isDrugsLoaded.value = true
   }
 
   /**
@@ -138,8 +138,8 @@
         updateResults(newResult)
         cleanArrayLength(results.value, drugsList.value)
 
-        totalTests.value++
-        resultsLoaded.value = true
+        countedTests.value++
+        isResultsLoaded.value = true
 
         previousPatients.value = patients.value
         previousDrugs.value    = drugs.value
@@ -164,7 +164,7 @@
    * @returns {Promise<void>}
    */
   const autoUpdateResults = async () : Promise<void> => {
-    if (autoUpdate.value) {
+    if (isAutoUpdated.value) {
 
       await loadData()
       await reportResults()
@@ -185,8 +185,8 @@
    * @returns {Promise<void>}
    */
   const validManualInput = async (): Promise<void> => {
-    patients.value = formatPatients(manualPatients.value)
-    drugs.value    = manualDrugs.value
+    patients.value = formatPatients(inputPatients.value)
+    drugs.value    = inputDrugs.value
 
     await reportResults()
   }
@@ -201,10 +201,10 @@
    */
   const checkSameManualInput = () : void => {
     const formatPreviousPatients: string = JSON.stringify(previousPatients.value)
-    const formatManualPatients: string   = JSON.stringify(formatPatients(manualPatients.value))
+    const formatManualPatients: string   = JSON.stringify(formatPatients(inputPatients.value))
 
     const isSamePatients: boolean = formatPreviousPatients === formatManualPatients
-    const isSameDrugs: boolean    = previousDrugs.value === manualDrugs.value
+    const isSameDrugs: boolean    = previousDrugs.value === inputDrugs.value
 
     if (!isSamePatients || !isSameDrugs) validManualInput()
     else alert(SAME_INPUT_DATA)
@@ -220,11 +220,11 @@
    */
   const handleManualInput = async () : Promise<void> => {
 
-    if (manualPatients.value) {
-      manualPatients.value = cleanValue(manualPatients.value)
-      manualDrugs.value    = cleanInput(manualDrugs.value)
+    if (inputPatients.value) {
+      inputPatients.value = cleanValue(inputPatients.value)
+      inputDrugs.value    = cleanInput(inputDrugs.value)
 
-      if (checkValidData(manualPatients.value, manualDrugs.value)) {
+      if (checkValidData(inputPatients.value, inputDrugs.value)) {
         checkSameManualInput()
       }
 
@@ -239,20 +239,20 @@
    * @method toggle
    *
    * @description
-   *  Basculer l'état d'un élément
+   *  Toggle the form or the auto update
    *
    * @param {string} type
-   *  Le type d'élément à basculer (form ou autoUpdate)
+   *  The type of the element
    *
    * @returns {void}
    */
   const toggle = (type: 'form' | 'autoUpdate') : void => {
 
   if (type === 'form') {
-    showForm.value = !showForm.value
+    isFormShown.value = !isFormShown.value
 
   } else if (type === 'autoUpdate') {
-    autoUpdate.value = !autoUpdate.value
+    isAutoUpdated.value = !isAutoUpdated.value
     autoUpdateResults()
   }
 }
@@ -274,7 +274,7 @@
     />
 
     <Button
-      v-if="patientsLoaded && drugsLoaded"
+      v-if="isPatientsLoaded && isDrugsLoaded"
       :action="reportResults"
       icon="fa-solid fa-user-nurse"
       label="Dispense Drugs"
@@ -282,41 +282,41 @@
 
     <Button
       :action="() => toggle('autoUpdate')"
-      :icon="autoUpdate ? 'fa-solid fa-sync fa-spin active' : 'fa-solid fa-sync'"
+      :icon="isAutoUpdated ? 'fa-solid fa-sync fa-spin active' : 'fa-solid fa-sync'"
       label="Auto Refresh"
     />
 
     <Button
       :action="() => toggle('form')"
-      :icon="showForm ? 'fa-solid fa-pen-to-square active' : 'fa-solid fa-pen-to-square'"
+      :icon="isFormShown ? 'fa-solid fa-pen-to-square active' : 'fa-solid fa-pen-to-square'"
       label="Manual Input"
     />
   </header>
 
   <Patients
-    v-if="patientsLoaded && !showForm"
+    v-if="isPatientsLoaded && !isFormShown"
     :patients="patients"
   />
 
   <Drugs
-    v-if="drugsLoaded && !showForm"
+    v-if="isDrugsLoaded && !isFormShown"
     :drugs="drugs"
   />
 
   <Form
-    v-if="showForm"
+    v-if="isFormShown"
     :handleSubmitManualInput="handleManualInput"
-    :manualPatients="manualPatients"
-    :manualDrugs="manualDrugs"
-    @update:manualPatients="manualPatients = $event"
-    @update:manualDrugs="manualDrugs = $event"
+    :inputPatients="inputPatients"
+    :inputDrugs="inputDrugs"
+    @update:inputPatients="inputPatients = $event"
+    @update:inputDrugs="inputDrugs = $event"
   />
 
   <Results
-    v-if="resultsLoaded"
+    v-if="isResultsLoaded"
     :drugs="drugsList"
     :results="results"
-    :total="totalTests"
+    :total="countedTests"
   />
 </template>
 
