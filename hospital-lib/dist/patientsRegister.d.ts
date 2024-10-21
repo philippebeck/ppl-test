@@ -1,6 +1,6 @@
 /**
  * @interface PatientsRegister
- * 
+ *
  * @description
  *  The patient states register
  *
@@ -11,5 +11,5 @@
  *  The number of patients in the state
  */
 export interface PatientsRegister {
-    [key: string]: number
+    [key: string]: number;
 }

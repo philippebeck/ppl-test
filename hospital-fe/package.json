@@ -1,0 +1,40 @@
+{
+  "name": "hospital-fe",
+  "version": "0.8.0",
+  "description": "Hospital frontend - The frontend of the simulation of disease in a group of patients",
+  "type": "module",
+  "keywords": [
+    "frontend",
+    "vue",
+    "vite",
+    "typescript",
+    "hospital",
+    "simulation",
+    "disease"
+  ],
+  "scripts": {
+    "start": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "axios": "^1.3.4",
+    "hospital-lib": "^1.0.0",
+    "sweetalert": "^2.1.2",
+    "vue": "^3.5.10"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.8",
+    "vue-tsc": "^2.1.6"
+  },
+  "repository": "https://github.com/philippebeck/ppl-test",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Philippe Beck",
+    "email": "philippebeck.dev@gmail.com",
+    "url": "https://github.com/philippebeck"
+  }
+}

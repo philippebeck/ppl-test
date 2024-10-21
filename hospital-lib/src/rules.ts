@@ -2,19 +2,22 @@ import { PatientsRegister as PR } from './patientsRegister';
 
 /**
  * @constant deadRules
+ *
  * @type {Array<{
  *  condition: (drugs: string[]) => boolean;
- *  valid: (patients: PR, newPatients: PR) => void;
+ *  valid: (patients: PR, newPatients: PR) => void
  *  invalid: (patients: PR, newPatients: PR) => void
  * }>}
- * @description - Dead rules
+ *
+ * @description
+ *  Dead rules
  *  - If the patients have Aspirin & Paracetamol, they will die
  * * (additional test to check the logic flexibility)
  * * - If the patients have Aspirin & Ibuprofen, they will die
  */
 export const deadRules: Array<{
   condition: (drugs: string[]) => boolean;
-  valid: (patients: PR, newPatients: PR) => void
+  valid: (patients: PR, newPatients: PR) => void;
   invalid: (patients: PR, newPatients: PR) => void
 }> = [
   {
@@ -27,7 +30,7 @@ export const deadRules: Array<{
     valid: (patients: PR, newPatients: PR) => newPatients.X = patients.F + patients.H + patients.D + patients.T + patients.X + patients.P, // Pain state added here
     invalid: (patients: PR, newPatients: PR) => newPatients.X = patients.X
   }
-];
+]
 
 /**
  * @constant treatmentRules
@@ -36,7 +39,9 @@ export const deadRules: Array<{
  *  valid: (patients: PR, newPatients: PR) => void;
  *  invalid: (patients: PR, newPatients: PR) => void
  * }>}
- * @description - Treatment rules
+ *
+ * @description
+ *  Treatment rules
  *  - If healthy patients have Antibiotic & Insulin, they will have a fever
  * * (modified test to check the logic flexibility)
  * * - If feverish patients have Aspirin or Ibuprofen or Paracetamol, the fever will be cured
@@ -69,4 +74,4 @@ export const treatmentRules: Array<{
     valid: (patients: PR, newPatients: PR) => newPatients.X += patients.D,
     invalid: (patients: PR, newPatients: PR) => newPatients.D += patients.D
   }
-];
+]
