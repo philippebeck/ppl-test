@@ -1,27 +1,23 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { PatientsRegister } from 'hospital-lib'
-  // TODO: import the Quarantine class from the package
   import { Quarantine } from 'hospital-lib/src/quarantine'
   import { Result } from './assets/Result'
 
   import {
     EMPTY_INPUT_PATIENTS,
-    INVALID_DRUGS,
-    INVALID_PATIENTS,
     SAME_INPUT_DATA,
     SAME_LOADED_DATA,
     UNDEFINED_DATA,
-    drugBase,
-    initPatientBase,
-    patientBase
+    initPatientBase
   } from './assets/data'
 
   import {
     sanitizeInput,
     cleanValue,
+    formatResult,
     getData,
-    isIncluded,
+    isValidData,
     truncateData
   } from './assets/services'
 
@@ -118,37 +114,6 @@
   }
 
   /**
-   * @method formatNewResult
-   *
-   * @description
-   *  Format the results of a quarantine simulation
-   *
-   * @param {PatientsRegister} input
-   *  The input states of the patients
-   *
-   * @param {PatientsRegister} output
-   *  The output states of the patients
-   *
-   * @returns {Result}
-   *  An object with each key being a patient state & each value being an object with
-   *  input & output properties, which are the counts of the state in the input &
-   *  output states, respectively
-   */
-  const formatNewResult = (input: PatientsRegister, output: PatientsRegister) : Result => {
-
-    return Object
-      .keys(input)
-      .reduce((acc: Result, key: string) => {
-        acc[key] = {
-          input: input[key],
-          output: output[key]
-        }
-
-        return acc
-      }, {})
-  }
-
-  /**
    * @method updateResults
    *
    * @description
@@ -187,7 +152,7 @@
         quarantine.setDrugs((drugs.value ?? '')?.split(','))
         quarantine.wait40Days()
 
-        const newResult: Result = formatNewResult(patients.value, quarantine.report())
+        const newResult: Result = formatResult(patients.value, quarantine.report())
 
         updateResults(newResult)
         truncateData(results.value, drugsList.value)
@@ -252,34 +217,6 @@
   }
 
   /**
-   * @method isValidData
-   *
-   * @description
-   *  Check if the data is valid
-   *
-   * @returns {boolean}
-   *  True if the data is valid, false otherwise
-   */
-  const isValidData = () : boolean => {
-    const patientsArray: string[] = manualPatients.value.split(',')
-    const drugsArray: string[]    = manualDrugs.value.split(',')
-
-    if (!patientsArray.every(patient => isIncluded(patient, patientBase))) {
-      alert(INVALID_PATIENTS)
-
-      return false
-    }
-
-    if (!drugsArray.every(drug => isIncluded(drug, drugBase))) {
-      alert(INVALID_DRUGS)
-
-      return false
-    }
-
-    return true
-  }
-
-  /**
    * @method validManualInput
    *
    * @description
@@ -327,7 +264,9 @@
       manualPatients.value = cleanValue(manualPatients.value)
       manualDrugs.value    = sanitizeInput(manualDrugs.value)
 
-      if (isValidData()) checkSameManualInput()
+      if (isValidData(manualPatients.value, manualDrugs.value)) {
+        checkSameManualInput()
+      }
 
     } else {
       alert(EMPTY_INPUT_PATIENTS)
