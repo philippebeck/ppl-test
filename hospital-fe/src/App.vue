@@ -24,13 +24,12 @@
   const showForm       = ref<boolean>(false)
 
   const patients     = ref<PatientsRegister | undefined>({})
-  const drugs        = ref<string[] | undefined>([])
-  const currentDrugs = ref<string | undefined>("")
+  const drugs        = ref<string | undefined>("")
   const drugsList    = ref<string[]>([])
   const results      = ref<Result[]>([])
 
   const previousPatients = ref(patients.value)
-  const previousDrugs    = ref(currentDrugs.value)
+  const previousDrugs    = ref(drugs.value)
 
   /**
    * @method formatPatientsData
@@ -81,10 +80,7 @@
    * @returns {Promise<void>}
    */
   const loadDrugs = async () : Promise<void> => {
-    const data: string | undefined = await getData('drugs')
-
-    currentDrugs.value = data
-    drugs.value = data?.split(',')
+    drugs.value = await getData('drugs')
 
     drugsLoaded.value = true
   }
@@ -145,8 +141,8 @@
   const updateResults = (newResult: Result) : void => {
     results.value.push(newResult)
 
-    if (currentDrugs.value) {
-      drugsList.value.push(currentDrugs.value.slice())
+    if (drugs.value) {
+      drugsList.value.push(drugs.value.slice())
     }
   }
 
@@ -162,12 +158,12 @@
     if (patients.value) {
 
       const isSamePatients: boolean = previousPatients.value === patients.value
-      const isSameDrugs:  boolean   = previousDrugs.value === currentDrugs.value
+      const isSameDrugs:  boolean   = previousDrugs.value === drugs.value
 
       if (!isSamePatients || !isSameDrugs) {
         const quarantine = new Quarantine(patients.value)
 
-        quarantine.setDrugs((currentDrugs.value ?? '')?.split(','))
+        quarantine.setDrugs((drugs.value ?? '')?.split(','))
         quarantine.wait40Days()
 
         const newResult: Result = formatNewResult(patients.value, quarantine.report())
@@ -179,7 +175,10 @@
         resultsLoaded.value = true
 
         previousPatients.value = patients.value
-        previousDrugs.value    = currentDrugs.value
+        previousDrugs.value    = drugs.value
+
+        console.log("currentDrugs => ", typeof drugs, drugs)
+        console.log("drugsList => ", typeof drugsList, drugsList)
 
       } else {
         alert(
@@ -250,8 +249,8 @@
     manualPatients.value = cleanValue(manualPatients.value)
     manualDrugs.value    = cleanValue(manualDrugs.value)
 
-    patients.value     = formatPatientsData(manualPatients.value)
-    currentDrugs.value = manualDrugs.value
+    patients.value = formatPatientsData(manualPatients.value)
+    drugs.value    = manualDrugs.value
 
     await reportResults()
   }
