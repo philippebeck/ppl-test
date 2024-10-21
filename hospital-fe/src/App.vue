@@ -8,14 +8,14 @@
     EMPTY_INPUT_PATIENTS,
     SAME_INPUT_DATA,
     SAME_LOADED_DATA,
-    UNDEFINED_DATA,
-    initPatientBase
+    UNDEFINED_DATA
   } from './assets/data'
 
   import {
     sanitizeInput,
     cleanValue,
-    formatResult,
+    formatPatients,
+    formatResults,
     getData,
     isValidData,
     truncateData
@@ -47,31 +47,6 @@
   const previousDrugs    = ref(drugs.value)
 
   /**
-   * @method formatPatientsData
-   *
-   * @description
-   *  Parses a string of patient states & counts occurrences of each state
-   *
-   * @param {string | undefined} data
-   *  A comma-separated string representing patient states
-   *
-   * @returns {Object}
-   *  An object with the counts of each state, initialized with default values
-   */
-  const formatPatientsData = (data: string | undefined): PatientsRegister | undefined => {
-
-    return data
-      ?.split(',')
-      .reduce((acc: PatientsRegister, current: string) => {
-        const defaultState: PatientsRegister = initPatientBase
-        acc = { ...defaultState, ...acc }
-        acc[current] = (acc[current] || 0) + 1
-
-        return acc
-      }, {})
-  }
-
-  /**
    * @method loadPatients
    *
    * @description
@@ -82,7 +57,7 @@
   const loadPatients = async () : Promise<void> => {
     const data: string | undefined = await getData("patients")
 
-    patients.value = formatPatientsData(data)
+    patients.value = formatPatients(data)
     patientsLoaded.value = true
   }
 
@@ -152,7 +127,7 @@
         quarantine.setDrugs((drugs.value ?? '')?.split(','))
         quarantine.wait40Days()
 
-        const newResult: Result = formatResult(patients.value, quarantine.report())
+        const newResult: Result = formatResults(patients.value, quarantine.report())
 
         updateResults(newResult)
         truncateData(results.value, drugsList.value)
@@ -225,7 +200,7 @@
    * @returns {Promise<void>}
    */
   const validManualInput = async (): Promise<void> => {
-    patients.value = formatPatientsData(manualPatients.value)
+    patients.value = formatPatients(manualPatients.value)
     drugs.value    = manualDrugs.value
 
     await reportResults()
@@ -241,7 +216,7 @@
    */
   const checkSameManualInput = () : void => {
     const formatPreviousPatients: string = JSON.stringify(previousPatients.value)
-    const formatManualPatients: string   = JSON.stringify(formatPatientsData(manualPatients.value))
+    const formatManualPatients: string   = JSON.stringify(formatPatients(manualPatients.value))
 
     const isSamePatients: boolean = formatPreviousPatients === formatManualPatients
     const isSameDrugs: boolean    = previousDrugs.value === manualDrugs.value
