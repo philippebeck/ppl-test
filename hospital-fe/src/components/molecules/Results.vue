@@ -116,6 +116,7 @@
   th,
   td {
     background-color: var(--light);
+    cursor: cell;
   }
 
   th {

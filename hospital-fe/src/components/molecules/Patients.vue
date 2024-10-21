@@ -31,5 +31,6 @@
     list-style: none;
     font-family: var(--monospace);
     font-size: 1.1rem;
+    cursor: vertical-text;
   }
 </style>

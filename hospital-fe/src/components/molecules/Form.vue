@@ -92,7 +92,7 @@
     font-weight: bold;
     background-color: var(--primary);
     color: var(--light);
-    cursor: pointer;
+    cursor: crosshair;
 
     &:hover,
     &:focus {
