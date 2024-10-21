@@ -236,6 +236,22 @@
     showForm.value = !showForm.value
   }
 
+/**
+ * @method checkManualDrugs
+ * 
+ * @description
+ *  Check if the manual drugs are valid
+ * 
+ * @returns {void}
+ */
+  const checkManualDrugs = () : void => {
+    if (manualDrugs.value) {
+      manualDrugs.value = cleanValue(manualDrugs.value)
+    } else {
+      manualDrugs.value = ''
+    }
+  }
+
   /**
    * @method handleSubmitManualInput
    *
@@ -245,12 +261,10 @@
    * @returns {Promise<void>}
    */
   const handleManualInput = async () : Promise<void> => {
-    // TODO: add managing of none drugs to add
-    // TODO: add checking for invalid inputs
-    manualPatients.value = cleanValue(manualPatients.value)
-    manualDrugs.value    = cleanValue(manualDrugs.value)
+    if (manualPatients.value) {
+      manualPatients.value = cleanValue(manualPatients.value)
 
-    if (manualPatients.value && manualDrugs.value) {
+      checkManualDrugs()
 
       const formatPreviousPatients: string = JSON.stringify(previousPatients.value)
       const formatManualPatients: string   = JSON.stringify(formatPatientsData(manualPatients.value))
