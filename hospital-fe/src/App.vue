@@ -28,6 +28,8 @@
   import Form from './components/molecules/Form.vue'
   import Results from './components/molecules/Results.vue'
 
+  // ********** CONSTANTS **********
+
   const totalTests     = ref<number>(0)
   const manualPatients = ref<string>('')
   const manualDrugs    = ref<string>('')
@@ -45,6 +47,8 @@
 
   const previousPatients = ref(patients.value)
   const previousDrugs    = ref(drugs.value)
+
+  // ********** LOADERS **********
 
   /**
    * @method loadPatients
@@ -87,6 +91,8 @@
     await loadPatients()
     await loadDrugs()
   }
+
+  // ********** RESULTS **********
 
   /**
    * @method updateResults
@@ -147,18 +153,7 @@
     }
   }
 
-  /**
-   * @method toggleAutoUpdate
-   *
-   * @description
-   *  Toggle the auto update
-   *
-   * @returns {void}
-   */
-  const toggleAutoUpdate = () : void => {
-    autoUpdate.value = !autoUpdate.value
-    autoUpdateResults()
-  }
+  // ********** AUTO UPDATE **********
 
   /**
    * @method autoUpdateResults
@@ -179,17 +174,7 @@
     }
   }
 
-  /**
-   * @method toggleForm
-   *
-   * @description
-   *  Toggle the form
-   *
-   * @returns {void}
-   */
-  const toggleForm = () : void => {
-    showForm.value = !showForm.value
-  }
+  // ********** MANUAL INPUT **********
 
   /**
    * @method validManualInput
@@ -247,6 +232,30 @@
       alert(EMPTY_INPUT_PATIENTS)
     }
   }
+
+  // ********** TOGGLER **********
+
+  /**
+   * @method toggle
+   *
+   * @description
+   *  Basculer l'état d'un élément
+   *
+   * @param {string} type
+   *  Le type d'élément à basculer (form ou autoUpdate)
+   *
+   * @returns {void}
+   */
+  const toggle = (type: 'form' | 'autoUpdate') : void => {
+
+  if (type === 'form') {
+    showForm.value = !showForm.value
+
+  } else if (type === 'autoUpdate') {
+    autoUpdate.value = !autoUpdate.value
+    autoUpdateResults()
+  }
+}
 </script>
 
 <template>
@@ -272,13 +281,13 @@
     />
 
     <Button
-      :action="toggleAutoUpdate"
+      :action="() => toggle('autoUpdate')"
       :icon="autoUpdate ? 'fa-solid fa-sync fa-spin active' : 'fa-solid fa-sync'"
       label="Auto Refresh"
     />
 
     <Button
-      :action="toggleForm"
+      :action="() => toggle('form')"
       :icon="showForm ? 'fa-solid fa-pen-to-square active' : 'fa-solid fa-pen-to-square'"
       label="Manual Input"
     />
