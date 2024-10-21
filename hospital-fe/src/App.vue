@@ -142,6 +142,8 @@
 
     if (currentDrugs.value) {
       drugsList.value.push(currentDrugs.value.slice())
+    } else {
+      drugsList.value.push('')
     }
   }
 
