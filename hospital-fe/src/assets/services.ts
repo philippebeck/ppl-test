@@ -72,6 +72,26 @@ export const getData = async (
 }
 
 /**
+ * @method isIncluded
+ *
+ * @description
+ *  Return if the string is included in the array
+ *
+ * @param {string} string
+ *  The string to check
+ *
+ * @param {string[]} array
+ *  The array to check the string in
+ *
+ * @returns {boolean}
+ *  True if the string is included in the array, false otherwise
+ */
+export const isIncluded = (string: string, array: string[]) : boolean => {
+
+  return array.includes(string)
+}
+
+/**
  * @function truncateData
  *
  * @description
