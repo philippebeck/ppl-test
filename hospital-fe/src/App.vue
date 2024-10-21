@@ -12,13 +12,13 @@
   } from './assets/data'
 
   import {
-    sanitizeInput,
+    checkValidData,
+    cleanArrayLength,
+    cleanInput,
     cleanValue,
     formatPatients,
     formatResults,
-    getData,
-    isValidData,
-    truncateData
+    getData
   } from './assets/services'
 
   import Title from './components/atoms/Title.vue'
@@ -130,7 +130,7 @@
         const newResult: Result = formatResults(patients.value, quarantine.report())
 
         updateResults(newResult)
-        truncateData(results.value, drugsList.value)
+        cleanArrayLength(results.value, drugsList.value)
 
         totalTests.value++
         resultsLoaded.value = true
@@ -237,9 +237,9 @@
 
     if (manualPatients.value) {
       manualPatients.value = cleanValue(manualPatients.value)
-      manualDrugs.value    = sanitizeInput(manualDrugs.value)
+      manualDrugs.value    = cleanInput(manualDrugs.value)
 
-      if (isValidData(manualPatients.value, manualDrugs.value)) {
+      if (checkValidData(manualPatients.value, manualDrugs.value)) {
         checkSameManualInput()
       }
 

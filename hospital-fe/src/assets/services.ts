@@ -10,6 +10,100 @@ import {
   patientBase
 } from './data'
 
+//! ********** CHECKERS **********
+
+/**
+ * @function checkArray
+ *
+ * @description
+ *  Return true if the string is included in the array
+ *
+ * @param {string} string
+ *  The string to check
+ *
+ * @param {string[]} array
+ *  The array to check the string in
+ *
+ * @returns {boolean}
+ *  True if the string is included in the array, false otherwise
+ */
+export const checkArray = (
+  string: string,
+  array: string[]
+) : boolean => {
+
+  return array.includes(string)
+}
+
+/**
+ * @function checkValidData
+ *
+ * @description
+ *  Check if the data is valid
+ *
+ * @param {string} patients
+ *  The patients data
+ *
+ * @param {string} drugs
+ *  The drugs data
+ *
+ * @returns {boolean}
+ *  True if the data is valid, false otherwise
+ */
+export const checkValidData = (
+  patients: string,
+  drugs: string
+): boolean => {
+
+  const patientsArray: string[] = patients.split(',')
+  const drugsArray: string[]    = drugs.split(',')
+
+  if (!patientsArray.every(patient => checkArray(patient, patientBase))) {
+    alert(INVALID_PATIENTS)
+
+    return false
+  }
+
+  if (!drugsArray.every(drug => checkArray(drug, drugBase))) {
+    alert(INVALID_DRUGS)
+
+    return false
+  }
+
+  return true
+}
+
+//! ********** CLEANERS **********
+
+/**
+ * @function cleanArrayLength
+ *
+ * @description
+ *  Truncate the array to the given length
+ *
+ * @param {Result[]} result
+ *  The result data to truncate
+ *
+ * @param {string[]} array
+ *  The array data to truncate
+ *  @default []
+ *
+ * @param {number} length
+ *  The length to truncate the data to
+ *  @default 10
+ *
+ * @returns {void}
+ */
+export const cleanArrayLength = (
+  result: Result[] ,
+  array: string[] = [],
+  length: number = 10
+) : void => {
+
+  if (result.length > length) result.shift()
+  if (array.length > 0 && array.length > length) array.shift()
+}
+
 /**
  * @function cleanValue
  *
@@ -28,6 +122,28 @@ export const cleanValue = (value: string) : string => {
 }
 
 /**
+ * @function cleanInput
+ * 
+ * @description
+ *  Clean the input
+ *
+ * @param {string} input
+ *  The input to clean
+ *
+ * @returns {string}
+ *  The cleaned input
+ */
+export const cleanInput = (input: string): string => {
+
+  if (input) input = cleanValue(input)
+  else input = ''
+
+  return input
+}
+
+//! ********** FORMATTERS **********
+
+/**
  * @function formatPatients
  *
  * @description
@@ -39,7 +155,9 @@ export const cleanValue = (value: string) : string => {
  * @returns {Object}
  *  An object with the counts of each state, initialized with default values
  */
-export const formatPatients = (patients: string | undefined): PatientsRegister | undefined => {
+export const formatPatients = (
+  patients: string | undefined
+): PatientsRegister | undefined => {
 
   return patients
     ?.split(',')
@@ -87,11 +205,14 @@ export const formatResults = (
     }, {})
 }
 
+//! ********** GETTER **********
+
 /**
  * @function getData
  *
  * @description
- *  Make a GET request to the given endpoint & return the response data
+ *  Make a GET request to the given endpoint
+ *  and return the response data
  *
  * @param {string} endpoint
  *  The endpoint to make the request to
@@ -118,114 +239,4 @@ export const getData = async (
   } catch (error) {
     console.error(error)
   }
-}
-
-/**
- * @function isIncluded
- *
- * @description
- *  Return if the string is included in the array
- *
- * @param {string} string
- *  The string to check
- *
- * @param {string[]} array
- *  The array to check the string in
- *
- * @returns {boolean}
- *  True if the string is included in the array, false otherwise
- */
-export const isIncluded = (
-  string: string,
-  array: string[]
-) : boolean => {
-
-  return array.includes(string)
-}
-
-/**
- * @function isValidData
- *
- * @description
- *  Check if the data is valid
- *
- * @param {string} patients
- *  The patients data
- *
- * @param {string} drugs
- *  The drugs data
- *
- * @returns {boolean}
- *  True if the data is valid, false otherwise
- */
-export const isValidData = (
-  patients: string,
-  drugs: string
-): boolean => {
-
-  const patientsArray: string[] = patients.split(',')
-  const drugsArray: string[]    = drugs.split(',')
-
-  if (!patientsArray.every(patient => isIncluded(patient, patientBase))) {
-    alert(INVALID_PATIENTS)
-
-    return false
-  }
-
-  if (!drugsArray.every(drug => isIncluded(drug, drugBase))) {
-    alert(INVALID_DRUGS)
-
-    return false
-  }
-
-  return true
-}
-
-/**
- * @function sanitizeInput
- * 
- * @description
- *  Check if the input value is valid
- *
- * @param {string} input
- *  The input to check
- *
- * @returns {string}
- *  The sanitized input
- */
-export const sanitizeInput = (input: string): string => {
-
-  if (input) input = cleanValue(input)
-  else input = ''
-
-  return input
-}
-
-/**
- * @function truncateData
- *
- * @description
- *  Truncate the data to the given length
- *
- * @param {Result[]} result
- *  The result data to truncate
- *
- * @param {string[]} array
- *  The array data to truncate
- *  @default []
- *
- * @param {number} length
- *  The length to truncate the data to
- *  @default 10
- *
- * @returns {void}
- */
-export const truncateData = (
-  result: Result[] ,
-  array: string[] = [],
-  length: number = 10
-) : void => {
-
-  if (result.length > length) result.shift()
-  if (array.length > 0 && array.length > length) array.shift()
 }
