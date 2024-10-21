@@ -111,14 +111,13 @@ export const isIncluded = (string: string, array: string[]) : boolean => {
  * @returns {void}
  */
 export const truncateData = (
-  primary: Result[] ,
-  secondary: string[] = [],
+  result: Result[] ,
+  array: string[] = [],
   length: number = 10
 ) : void => {
 
-  if (primary.length > length) {
-    primary.shift()
+  if (result.length > length) result.shift()
+  if (array.length > 0 && array.length > length) array.shift()
+}
 
-    if (secondary.length > 0) secondary.shift()
-  }
 }
