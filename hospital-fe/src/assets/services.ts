@@ -27,7 +27,7 @@ export const cleanValue = (value: string) : string => {
 }
 
 /**
- * @method formatResult
+ * @function formatResult
  *
  * @description
  *  Format the results of a quarantine simulation
@@ -95,7 +95,7 @@ export const getData = async (
 }
 
 /**
- * @method isIncluded
+ * @function isIncluded
  *
  * @description
  *  Return if the string is included in the array
@@ -118,7 +118,7 @@ export const isIncluded = (
 }
 
 /**
- * @method isValidData
+ * @function isValidData
  *
  * @description
  *  Check if the data is valid
@@ -156,7 +156,7 @@ export const isValidData = (
 }
 
 /**
- * @method sanitizeInput
+ * @function sanitizeInput
  * 
  * @description
  *  Check if the input value is valid
