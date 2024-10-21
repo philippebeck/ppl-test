@@ -179,9 +179,6 @@
         previousPatients.value = patients.value
         previousDrugs.value    = drugs.value
 
-        console.log("currentDrugs => ", typeof drugs, drugs)
-        console.log("drugsList => ", typeof drugsList, drugsList)
-
       } else {
         alert(
           'Patients & drugs are the same: please load new data.'
@@ -218,9 +215,11 @@
    */
   const autoUpdateResults = async () : Promise<void> => {
     if (autoUpdate.value) {
+
       await loadData()
       await reportResults()
       await new Promise(resolve => setTimeout(resolve, 30000))
+
       autoUpdateResults()
     }
   }
@@ -246,15 +245,29 @@
    * @returns {Promise<void>}
    */
   const handleManualInput = async () : Promise<void> => {
-    // TODO: add checking for different datasets
+    // TODO: add managing of none drugs to add
     // TODO: add checking for invalid inputs
     manualPatients.value = cleanValue(manualPatients.value)
     manualDrugs.value    = cleanValue(manualDrugs.value)
 
-    patients.value = formatPatientsData(manualPatients.value)
-    drugs.value    = manualDrugs.value
+    if (manualPatients.value && manualDrugs.value) {
 
-    await reportResults()
+      const formatPreviousPatients: string = JSON.stringify(previousPatients.value)
+      const formatManualPatients: string   = JSON.stringify(formatPatientsData(manualPatients.value))
+
+      const isSamePatients: boolean = formatPreviousPatients === formatManualPatients
+      const isSameDrugs: boolean    = previousDrugs.value === manualDrugs.value
+
+      if (!isSamePatients || !isSameDrugs) {
+        patients.value = formatPatientsData(manualPatients.value)
+        drugs.value = manualDrugs.value
+
+        await reportResults()
+
+      } else {
+        alert('Patients & drugs are the same: please type new data.')
+      }
+    }
   }
 </script>
 
