@@ -12,6 +12,8 @@ import { PatientsRegister as PR } from './patientsRegister';
  * @description
  *  Dead rules
  *  - If the patients have Aspirin & Paracetamol, they will die
+ * * (additional test to check the logic flexibility)
+ * * - If the patients have Aspirin & Ibuprofen, they will die
  */
 export const deadRules: Array<{
   condition: (drugs: string[]) => boolean;
@@ -20,14 +22,18 @@ export const deadRules: Array<{
 }> = [
   {
     condition: (drugs: string[]) => drugs.includes('As') && drugs.includes('P'),
-    valid: (patients: PR, newPatients: PR) => newPatients.X = patients.F + patients.H + patients.D + patients.T + patients.X,
+    valid: (patients: PR, newPatients: PR) => newPatients.X = patients.F + patients.H + patients.D + patients.T + patients.X + patients.P, // Pain state added here
+    invalid: (patients: PR, newPatients: PR) => newPatients.X = patients.X
+  },
+  {
+    condition: (drugs: string[]) => drugs.includes('As') && drugs.includes('Ib'), // Ibuprofen added here
+    valid: (patients: PR, newPatients: PR) => newPatients.X = patients.F + patients.H + patients.D + patients.T + patients.X + patients.P, // Pain state added here
     invalid: (patients: PR, newPatients: PR) => newPatients.X = patients.X
   }
 ]
 
 /**
  * @constant treatmentRules
- *
  * @type {Array<{
  *  condition: (drugs: string[]) => boolean;
  *  valid: (patients: PR, newPatients: PR) => void;
@@ -37,7 +43,9 @@ export const deadRules: Array<{
  * @description
  *  Treatment rules
  *  - If healthy patients have Antibiotic & Insulin, they will have a fever
- *  - If feverish patients have Aspirin or Paracetamol, the fever will be cured
+ * * (modified test to check the logic flexibility)
+ * * - If feverish patients have Aspirin or Ibuprofen or Paracetamol, the fever will be cured
+ * * - If painful patients have Aspirin or Ibuprofen or Paracetamol, the pain will be cured
  *  - If tuberculosis patients have Antibiotic, the tuberculosis will be cured
  *  - If diabetic patients have not Insulin, they will die
  */
@@ -52,9 +60,9 @@ export const treatmentRules: Array<{
     invalid: (patients: PR, newPatients: PR) => newPatients.H += patients.H
   },
   {
-    condition: (drugs: string[]) => drugs.includes('As') || drugs.includes('P'),
-    valid: (patients: PR, newPatients: PR) => newPatients.H += patients.F,
-    invalid: (patients: PR, newPatients: PR) => newPatients.F += patients.F
+    condition: (drugs: string[]) => drugs.includes('As') || drugs.includes('P') || drugs.includes('Ib'), // Ibuprofen added here
+    valid: (patients: PR, newPatients: PR) => newPatients.H += patients.F + patients.P, // Pain state added here
+    invalid: (patients: PR, newPatients: PR) => { newPatients.F += patients.F; newPatients.P += patients.P } // Pain state added here
   },
   {
     condition: (drugs: string[]) => drugs.includes('An'),

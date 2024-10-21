@@ -25,8 +25,9 @@ export class QuarantineTest {
    *  (in the test below, we will always have only one disease / patient)
    *
    *  The characters mean:
-   *  - H : Healthy
    *  - F : Fever
+   * * - P : Painly (adding state to check the logic flexibility)
+   *  - H : Healthy
    *  - D : Diabetes
    *  - T : Tuberculosis
    *  - X : Dead
@@ -36,7 +37,7 @@ export class QuarantineTest {
    *  Then Quarantine can provide a report that gives the number of patients that have the given disease
    */
   public setup() {
-    this.quarantine = new Quarantine({ F: 1, H: 2, D: 3, T: 1, X: 2 });
+    this.quarantine = new Quarantine({ F: 1, P: 3, H: 2, D: 3, T: 1, X: 2 });
   }
 
   //! ********** TEST BEFORE DRUG **********
@@ -47,7 +48,7 @@ export class QuarantineTest {
    * @description - Get the report of the patients before treatment
    */
   public beforeTreatment(): void {
-    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 3, T: 1, X: 2 });
+    Expect(this.quarantine.report()).toEqual({ F: 1, P: 3, H: 2, D: 3, T: 1, X: 2 });
   }
 
   //! ********** TEST WITHOUT DRUG **********
@@ -61,7 +62,7 @@ export class QuarantineTest {
   public noTreatment(): void {
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 0, T: 1, X: 5 });
+    Expect(this.quarantine.report()).toEqual({ F: 1, P: 3, H: 2, D: 0, T: 1, X: 5 });
   }
 
     //! ********** TESTS WITH ONLY ONE DRUG **********
@@ -77,7 +78,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 1, H: 3, D: 0, T: 0, X: 5 });
+    Expect(this.quarantine.report()).toEqual({ F: 1, P: 3, H: 3, D: 0, T: 0, X: 5 });
   }
 
   @Test()
@@ -85,13 +86,30 @@ export class QuarantineTest {
    * @method aspirin
    * @description - Simulate what happens if aspirin is given to the patients:
    *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
    *  - For a diabetic patient, he will die
    */
   public aspirin(): void {
     this.quarantine.setDrugs(['As']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 0, T: 1, X: 5 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 6, D: 0, T: 1, X: 5 });
+  }
+
+  @Test()
+  /**
+   * @method ibuprofen 
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if ibuprofen is given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
+   *  - For a diabetic patient, he will die
+   */
+  public ibuprofen(): void {
+    this.quarantine.setDrugs(['Ib']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 6, D: 0, T: 1, X: 5 });
   }
 
   @Test()
@@ -104,7 +122,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 1, H: 2, D: 3, T: 1, X: 2 });
+    Expect(this.quarantine.report()).toEqual({ F: 1, P: 3, H: 2, D: 3, T: 1, X: 2 });
   }
 
   @Test()
@@ -112,13 +130,14 @@ export class QuarantineTest {
    * @method paracetamol
    * @description - Simulate what happens if paracetamol is given to the patients:
    *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
    *  - For a diabetic patient, he will die
    */
   public paracetamol(): void {
     this.quarantine.setDrugs(['P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 0, T: 1, X: 5 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 6, D: 0, T: 1, X: 5 });
   }
 
   //! ********** TESTS WITH TWO DRUGS **********
@@ -128,6 +147,7 @@ export class QuarantineTest {
    * @method antibioticAndAspirin
    * @description - Simulate what happens if antibiotics & aspirin are given to the patients:
    *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
    *  - For a diabetic patient, he will die
    *  - For a tuberculosis patient, the tuberculosis will be cured
    */
@@ -135,7 +155,24 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'As']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 4, D: 0, T: 0, X: 5 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 7, D: 0, T: 0, X: 5 });
+  }
+
+  @Test()
+  /**
+   * @method antibioticAndIburopfen
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotics & ibuprofen are given to the patients:
+   *  - For a feverish patient has, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
+   *  - For a diabetic patient, he will die
+   *  - For a tuberculosis patient, the tuberculosis will be cured
+   */
+  public antibioticAndIburopfen(): void {
+    this.quarantine.setDrugs(['An', 'Ib']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 7, D: 0, T: 0, X: 5 });
   }
 
   @Test()
@@ -150,7 +187,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 3, H: 1, D: 3, T: 0, X: 2 });
+    Expect(this.quarantine.report()).toEqual({ F: 3, P: 3, H: 1, D: 3, T: 0, X: 2 });
   }
 
   @Test()
@@ -158,6 +195,7 @@ export class QuarantineTest {
    * @method antibioticAndParacetamol
    * @description - Simulate what happens if antibiotics & paracetamol are given to the patients:
    *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
    *  - For a diabetic patient, he will die
    *  - For a tuberculosis patient, the tuberculosis will be cured
    */
@@ -165,7 +203,21 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 4, D: 0, T: 0, X: 5 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 7, D: 0, T: 0, X: 5 });
+  }
+
+  @Test()
+  /**
+   * @method aspirinAndIbuprofen
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if aspirin & ibuprofen are given to the patients:
+   *  - For any patient, he will die
+   */
+  public aspirinAndIbuprofen(): void {
+    this.quarantine.setDrugs(['As', 'Ib']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
   }
 
   @Test()
@@ -173,13 +225,14 @@ export class QuarantineTest {
    * @method aspirinAndInsulin
    * @description - Simulate what happens if aspirin & insulin are given to the patients:
    *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
    *  - For a diabetic patient, he will not die
    */
   public aspirinAndInsulin(): void {
     this.quarantine.setDrugs(['As', 'I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 3, T: 1, X: 2 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 6, D: 3, T: 1, X: 2 });
   }
 
   @Test()
@@ -192,7 +245,39 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['P', 'As']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 9 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
+
+  @Test()
+  /**
+   * @method ibuprofenAndInsulin
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if ibuprofen & insulin are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
+   *  - For a diabetic patient, he will not die
+   */
+  public ibuprofenAndInsulin(): void {
+    this.quarantine.setDrugs(['Ib', 'I']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 6, D: 3, T: 1, X: 2 });
+  }
+
+  @Test()
+  /**
+   * @method ibuprofenAndParacetamol
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if ibuprofen & paracetamol are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
+   *  - For a diabetic patient, he will die
+   * */
+  public ibuprofenAndParacetamol(): void {
+    this.quarantine.setDrugs(['P', 'Ib']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 6, D: 0, T: 1, X: 5 });
   }
 
   @Test()
@@ -200,22 +285,38 @@ export class QuarantineTest {
    * @method insulinAndParacetamol
    * @description - Simulate what happens if insulin & paracetamol are given to the patients:
    *  - For a feverish patient, his fever will be cured
+   *  * - For a painly patient, the pain will be cured
    *  - For a diabetic patient, he will not die
    */
   public insulinAndParacetamol(): void {
     this.quarantine.setDrugs(['P', 'I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 3, D: 3, T: 1, X: 2 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 6, D: 3, T: 1, X: 2 });
   }
 
   //! ********** TESTS WITH THREE DRUGS **********
 
   @Test()
   /**
+   * @method antibioticAspirinAndIbuprofen
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotic, aspirin & ibuprofen are given to the patients:
+   *  - For any patient, he will die
+   */
+  public antibioticAspirinAndIbuprofen(): void {
+    this.quarantine.setDrugs(['An', 'As', 'Ib']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
+
+  @Test()
+  /**
    * @method antibioticAspirinAndInsulin
    * @description - Simulate what happens if antibiotic, aspirin & insulin are given to the patients:
    *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
    *  - For a healthy patient, he will have a fever
    *  - For a diabetic patient, he will not die
    */
@@ -223,7 +324,7 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'As', 'I']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 2, H: 2, D: 3, T: 0, X: 2 });
+    Expect(this.quarantine.report()).toEqual({ F: 2, P: 0, H: 5, D: 3, T: 0, X: 2 });
   }
 
   @Test()
@@ -236,7 +337,41 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'As', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 9 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
+
+  @Test()
+  /**
+   * @method antibioticIburopfenAndInsulin
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotic, iburopfen & insulin are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
+   *  - For a healthy patient, he will have a fever
+   *  - For a diabetic patient, he will not die
+   */
+  public antibioticIburopfenAndInsulin(): void {
+    this.quarantine.setDrugs(['An', 'Ib', 'I']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 2, P: 0, H: 5, D: 3, T: 0, X: 2 });
+  }
+
+  @Test()
+  /**
+   * @method antibioticIburopfenAndParacetamol
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotic, iburopfen & paracetamol are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
+   *  - For a diabetic patient, he will die
+   *  - For a tuberculosis patient, the tuberculosis will be cured
+   */
+  public antibioticIburopfenAndParacetamol(): void {
+    this.quarantine.setDrugs(['An', 'Ib', 'P']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 7, D: 0, T: 0, X: 5 });
   }
 
   @Test()
@@ -244,6 +379,7 @@ export class QuarantineTest {
    * @method antibioticInsulinAndParacetamol
    * @description - Simulate what happens if antibiotic, insulin & paracetamol are given to the patients:
    *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
    *  - For a healthy patient, he will have a fever
    *  - For a diabetic patient, he will not die
    */
@@ -251,7 +387,35 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'I', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 2, H: 2, D: 3, T: 0, X: 2 });
+    Expect(this.quarantine.report()).toEqual({ F: 2, P: 0, H: 5, D: 3, T: 0, X: 2 });
+  }
+
+  @Test()
+  /**
+   * @method aspirinIbuprofenAndInsulin
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if aspirin, iburopfen & insulin are given to the patients:
+   *  - For any patient, he will die
+   */
+  public aspirinIbuprofenAndInsulin(): void {
+    this.quarantine.setDrugs(['As', 'Ib', 'I']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
+
+  @Test()
+  /**
+   * @method aspirinIbuprofenAndParacetamol
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if aspirin, iburopfen & paracetamol are given to the patients:
+   *  - For any patient, he will die
+   */
+  public aspirinIbuprofenAndParacetamol(): void {
+    this.quarantine.setDrugs(['As', 'Ib', 'P']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
   }
 
   @Test()
@@ -264,10 +428,54 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['As', 'I', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 9 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
+
+  @Test()
+  /**
+   * @method ibuprofenInsulinAndParacetamol
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if ibuprofen, insulin & paracetamol are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
+   *  - For a diabetic patient, he will not die
+   */
+  public ibuprofenInsulinAndParacetamol(): void {
+    this.quarantine.setDrugs(['Ib', 'I', 'P']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 6, D: 3, T: 1, X: 2 });
   }
 
   //! ********** TESTS WITH FOUR DRUGS **********
+
+  @Test()
+  /**
+   * @method antibioticAspirinIbuprofenAndInsulin
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotic, aspirin, insulin & paracetamol are given to the patients:
+   *  - For any patient, he will die
+   */
+  public antibioticAspirinIbuprofenAndInsulin(): void {
+    this.quarantine.setDrugs(['An', 'As', 'Ib', 'I']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
+
+  @Test()
+  /**
+   * @method antibioticAspirinIbuprofenAndParacetamol
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotic, aspirin, insulin & paracetamol are given to the patients:
+   *  - For any patient, he will die
+   */
+  public antibioticAspirinIbuprofenAndParacetamol(): void {
+    this.quarantine.setDrugs(['An', 'As', 'Ib', 'P']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
 
   @Test()
   /**
@@ -279,6 +487,53 @@ export class QuarantineTest {
     this.quarantine.setDrugs(['An', 'As', 'I', 'P']);
     this.quarantine.wait40Days();
 
-    Expect(this.quarantine.report()).toEqual({ F: 0, H: 0, D: 0, T: 0, X: 9 });
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
+
+  @Test()
+  /**
+   * @method antibioticIbuprofenInsulinAndParacetamol
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotic, aspirin, insulin & paracetamol are given to the patients:
+   *  - For a feverish patient, the fever will be cured
+   *  * - For a painly patient, the pain will be cured
+   *  - For a diabetic patient, he will not die
+   *  - For a tuberculosis patient, the tuberculosis will be cured
+   */
+  public antibioticIbuprofenInsulinAndParacetamol(): void {
+    this.quarantine.setDrugs(['An', 'Ib', 'I', 'P']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 2, P: 0, H: 5, D: 3, T: 0, X: 2 });
+  }
+
+  @Test()
+  /**
+   * @method aspirinIbuprofenInsulinAndParacetamol
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotic, aspirin, insulin & paracetamol are given to the patients:
+   *  - For any patient, he will die
+   */
+  public aspirinIbuprofenInsulinAndParacetamol(): void {
+    this.quarantine.setDrugs(['As', 'Ib', 'I', 'P']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
+  }
+
+  //! ********** TESTS WITH FIVE DRUGS **********
+
+  @Test()
+  /**
+   * @method antibioticAspirinIbuprofenInsulinAndParacetamol
+   * * (additional test to check the logic flexibility)
+   * @description - Simulate what happens if antibiotic, aspirin, ibuprofen, insulin & paracetamol are given to the patients:
+   *  - For any patient, he will die
+   */
+  public antibioticAspirinIbuprofenInsulinAndParacetamol(): void {
+    this.quarantine.setDrugs(['An', 'As', 'Ib', 'I', 'P']);
+    this.quarantine.wait40Days();
+
+    Expect(this.quarantine.report()).toEqual({ F: 0, P: 0, H: 0, D: 0, T: 0, X: 12 });
   }
 }
