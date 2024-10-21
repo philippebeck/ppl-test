@@ -2,6 +2,26 @@ import axios from 'axios'
 import { Result } from './Result'
 
 /**
+ * @method sanitizeInput
+ * 
+ * @description
+ *  Check if the input value is valid
+ *
+ * @param {string} input
+ *  The input to check
+ *
+ * @returns {string}
+ *  The sanitized input
+ */
+export const sanitizeInput = (input: string): string => {
+
+  if (input) input = cleanValue(input)
+  else input = ''
+
+  return input
+}
+
+/**
  * @function cleanValue
  *
  * @description
