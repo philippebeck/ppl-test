@@ -3,9 +3,9 @@
   import { PatientsRegister } from 'hospital-lib'
   // TODO: import the Quarantine class from the package
   import { Quarantine } from 'hospital-lib/src/quarantine'
-  import { Result } from './Result'
-  import { patientBase, initPatientBase, drugBase } from './data'
-  import { cleanValue, getData, truncateData } from './services'
+  import { Result } from './assets/Result'
+  import { patientBase, initPatientBase, drugBase } from './assets/data'
+  import { cleanValue, getData, truncateData } from './assets/services'
 
   import Title from './components/atoms/Title.vue'
   import Button from './components/atoms/Button.vue'

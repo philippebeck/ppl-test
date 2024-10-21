@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { Result } from '../../Result'
+  import { Result } from '../../assets/Result'
   import Title from '../atoms/Title.vue'
 
   const props = defineProps<{
