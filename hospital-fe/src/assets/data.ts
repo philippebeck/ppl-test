@@ -32,20 +32,23 @@ export const patientBase: string[] = [
 
 //! ********** MESSAGES **********
 
+export const ERROR: string =
+  'Oops !'
+
 export const EMPTY_INPUT_PATIENTS: string =
-  'Error: please type patients.'
+  'No patients data: Please type patients.'
 
 export const INVALID_DRUGS: string =
-  'Error: one or more drugs are invalid.'
+  'One or more drugs are invalid: Please type valid drugs.'
 
 export const INVALID_PATIENTS: string =
-  'Error: one or more patients are invalid.'
+  'One or more patients are invalid: Please type valid patients.'
 
 export const SAME_INPUT_DATA: string =
-  'Patients & drugs are the same: please type new data.'
+  'Patients & drugs are the same: Please type new data.'
 
 export const SAME_LOADED_DATA: string =
-  'Patients & drugs are the same: please load new data.'
+  'Patients & drugs are the same: Please load new data.'
 
 export const UNDEFINED_DATA: string =
-  'Patients data is undefined, cannot create Quarantine.'
+  'Patients data is undefined: Cannot create Quarantine.'

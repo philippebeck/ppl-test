@@ -1,8 +1,10 @@
 import axios from 'axios'
+import swal from 'sweetalert'
 import { PatientsRegister } from 'hospital-lib'
 import { Result } from './Result'
 
 import {
+  ERROR,
   INVALID_DRUGS,
   INVALID_PATIENTS,
   drugBase,
@@ -59,13 +61,13 @@ export const checkValidData = (
   const drugsArray: string[]    = drugs.split(',')
 
   if (!patientsArray.every(patient => checkArray(patient, patientBase))) {
-    alert(INVALID_PATIENTS)
+    swal(ERROR, INVALID_PATIENTS, "error")
 
     return false
   }
 
   if (!drugsArray.every(drug => checkArray(drug, drugBase))) {
-    alert(INVALID_DRUGS)
+    swal(ERROR, INVALID_DRUGS, "error")
 
     return false
   }

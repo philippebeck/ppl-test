@@ -1,10 +1,12 @@
 <script setup lang="ts">
   import { ref } from 'vue'
+  import swal from 'sweetalert'
   import { PatientsRegister } from 'hospital-lib'
   import { Quarantine } from 'hospital-lib/src/quarantine'
   import { Result } from './assets/Result'
 
   import {
+    ERROR,
     EMPTY_INPUT_PATIENTS,
     SAME_INPUT_DATA,
     SAME_LOADED_DATA,
@@ -145,11 +147,11 @@
         previousDrugs.value    = drugs.value
 
       } else {
-        alert(SAME_LOADED_DATA)
+        swal(ERROR, SAME_LOADED_DATA, "error")
       }
 
     } else {
-      alert(UNDEFINED_DATA)
+      swal(ERROR, UNDEFINED_DATA, "error")
     }
   }
 
@@ -207,7 +209,7 @@
     const isSameDrugs: boolean    = previousDrugs.value === inputDrugs.value
 
     if (!isSamePatients || !isSameDrugs) validManualInput()
-    else alert(SAME_INPUT_DATA)
+    else swal(ERROR, SAME_INPUT_DATA, "error")
   }
 
   /**
@@ -229,7 +231,7 @@
       }
 
     } else {
-      alert(EMPTY_INPUT_PATIENTS)
+      swal(ERROR, EMPTY_INPUT_PATIENTS, "error")
     }
   }
 
@@ -282,13 +284,15 @@
 
     <Button
       :action="() => toggle('autoUpdate')"
-      :icon="isAutoUpdated ? 'fa-solid fa-sync fa-spin active' : 'fa-solid fa-sync'"
+      :class="isAutoUpdated ? 'active' : ''"
+      :icon="isAutoUpdated ? 'fa-solid fa-sync fa-spin' : 'fa-solid fa-sync'"
       label="Auto Refresh"
     />
 
     <Button
       :action="() => toggle('form')"
-      :icon="isFormShown ? 'fa-solid fa-pen-to-square active' : 'fa-solid fa-pen-to-square'"
+      :class="isFormShown ? 'active' : ''"
+      :icon="isFormShown ? 'fa-regular fa-pen-to-square' : 'fa-solid fa-pen-to-square'"
       label="Manual Input"
     />
   </header>
