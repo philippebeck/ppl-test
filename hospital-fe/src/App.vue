@@ -4,6 +4,7 @@
   // TODO: import the Quarantine class from the package
   import { Quarantine } from 'hospital-lib/src/quarantine'
   import { Result } from './Result'
+  import { patientBase, initPatientBase, drugBase } from './data'
   import { cleanValue, getData, truncateData } from './services'
 
   import Title from './components/atoms/Title.vue'
@@ -48,7 +49,7 @@
     return data
       ?.split(',')
       .reduce((acc: PatientsRegister, current: string) => {
-        const defaultState: PatientsRegister = { F: 0, H: 0, D: 0, T: 0, X: 0 }
+        const defaultState: PatientsRegister = initPatientBase
         acc = { ...defaultState, ...acc }
         acc[current] = (acc[current] || 0) + 1
 
@@ -253,6 +254,102 @@
   }
 
   /**
+   * @method isValidPatient
+   *
+   * @description
+   *  Check if the patient is valid
+   *
+   * @param {string} patient
+   *  The patient to check
+   *
+   * @returns {boolean}
+   *  True if the patient is valid, false otherwise
+   */
+  const isValidPatient = (patient: string) : boolean => {
+
+    return patientBase.includes(patient)
+  }
+
+  /**
+   * @method isValidDrug
+   *
+   * @description
+   *  Check if the drug is valid
+   *
+   * @param {string} drug
+   *  The drug to check
+   *
+   * @returns {boolean}
+   *  True if the drug is valid, false otherwise
+   */
+  const isValidDrug = (drug: string) : boolean => {
+
+    return drugBase.includes(drug)
+  }
+
+  /**
+   * @method isValidData
+   *
+   * @description
+   *  Check if the data is valid
+   *
+   * @returns {boolean}
+   *  True if the data is valid, false otherwise
+   */
+  const isValidData = () : boolean => {
+    const patientsArray: string[] = manualPatients.value.split(',')
+    const drugsArray: string[]    = manualDrugs.value.split(',')
+
+    if (!patientsArray.every(isValidPatient)) {
+      alert('Error: one or more patients are invalid.')
+
+      return false
+    }
+
+    if (!drugsArray.every(isValidDrug)) {
+      alert('Error: one or more drugs are invalid.')
+
+      return false
+    }
+
+    return true
+  }
+
+  /**
+   * @method validManualInput
+   *
+   * @description
+   *  Validate the manual input
+   *
+   * @returns {Promise<void>}
+   */
+  const validManualInput = async (): Promise<void> => {
+    patients.value = formatPatientsData(manualPatients.value)
+    drugs.value    = manualDrugs.value
+
+    await reportResults()
+  }
+
+  /**
+   * @method checkSameManualInput
+   *
+   * @description
+   *  Check if the manual input is the same as the previous one
+   *
+   * @returns {void}
+   */
+  const checkSameManualInput = () : void => {
+    const formatPreviousPatients: string = JSON.stringify(previousPatients.value)
+    const formatManualPatients: string   = JSON.stringify(formatPatientsData(manualPatients.value))
+
+    const isSamePatients: boolean = formatPreviousPatients === formatManualPatients
+    const isSameDrugs: boolean    = previousDrugs.value === manualDrugs.value
+
+    if (!isSamePatients || !isSameDrugs) validManualInput()
+    else alert('Patients & drugs are the same: please type new data.')
+  }
+
+  /**
    * @method handleSubmitManualInput
    *
    * @description
@@ -261,26 +358,16 @@
    * @returns {Promise<void>}
    */
   const handleManualInput = async () : Promise<void> => {
+
     if (manualPatients.value) {
       manualPatients.value = cleanValue(manualPatients.value)
 
       checkManualDrugs()
 
-      const formatPreviousPatients: string = JSON.stringify(previousPatients.value)
-      const formatManualPatients: string   = JSON.stringify(formatPatientsData(manualPatients.value))
+      if (isValidData()) checkSameManualInput()
 
-      const isSamePatients: boolean = formatPreviousPatients === formatManualPatients
-      const isSameDrugs: boolean    = previousDrugs.value === manualDrugs.value
-
-      if (!isSamePatients || !isSameDrugs) {
-        patients.value = formatPatientsData(manualPatients.value)
-        drugs.value = manualDrugs.value
-
-        await reportResults()
-
-      } else {
-        alert('Patients & drugs are the same: please type new data.')
-      }
+    } else {
+      alert('Error: please type patients.')
     }
   }
 </script>
