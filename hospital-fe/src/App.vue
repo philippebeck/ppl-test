@@ -4,6 +4,7 @@
   // TODO: import the Quarantine class from the package
   import { Quarantine } from 'hospital-lib/src/quarantine'
   import { Result } from './Result'
+  import { patientBase, initPatientBase, drugBase } from './data'
   import { cleanValue, getData, truncateData } from './services'
 
   import Title from './components/atoms/Title.vue'
@@ -24,13 +25,12 @@
   const showForm       = ref<boolean>(false)
 
   const patients     = ref<PatientsRegister | undefined>({})
-  const drugs        = ref<string[] | undefined>([])
-  const currentDrugs = ref<string | undefined>("")
+  const drugs        = ref<string | undefined>("")
   const drugsList    = ref<string[]>([])
   const results      = ref<Result[]>([])
 
   const previousPatients = ref(patients.value)
-  const previousDrugs    = ref(currentDrugs.value)
+  const previousDrugs    = ref(drugs.value)
 
   /**
    * @method formatPatientsData
@@ -49,7 +49,7 @@
     return data
       ?.split(',')
       .reduce((acc: PatientsRegister, current: string) => {
-        const defaultState: PatientsRegister = { F: 0, H: 0, D: 0, T: 0, X: 0 }
+        const defaultState: PatientsRegister = initPatientBase
         acc = { ...defaultState, ...acc }
         acc[current] = (acc[current] || 0) + 1
 
@@ -81,10 +81,7 @@
    * @returns {Promise<void>}
    */
   const loadDrugs = async () : Promise<void> => {
-    const data: string | undefined = await getData('drugs')
-
-    currentDrugs.value = data
-    drugs.value = data?.split(',')
+    drugs.value = await getData('drugs')
 
     drugsLoaded.value = true
   }
@@ -145,8 +142,10 @@
   const updateResults = (newResult: Result) : void => {
     results.value.push(newResult)
 
-    if (currentDrugs.value) {
-      drugsList.value.push(currentDrugs.value.slice())
+    if (drugs.value) {
+      drugsList.value.push(drugs.value.slice())
+    } else {
+      drugsList.value.push('')
     }
   }
 
@@ -162,12 +161,12 @@
     if (patients.value) {
 
       const isSamePatients: boolean = previousPatients.value === patients.value
-      const isSameDrugs:  boolean   = previousDrugs.value === currentDrugs.value
+      const isSameDrugs:  boolean   = previousDrugs.value === drugs.value
 
       if (!isSamePatients || !isSameDrugs) {
         const quarantine = new Quarantine(patients.value)
 
-        quarantine.setDrugs((currentDrugs.value ?? '')?.split(','))
+        quarantine.setDrugs((drugs.value ?? '')?.split(','))
         quarantine.wait40Days()
 
         const newResult: Result = formatNewResult(patients.value, quarantine.report())
@@ -179,7 +178,7 @@
         resultsLoaded.value = true
 
         previousPatients.value = patients.value
-        previousDrugs.value    = currentDrugs.value
+        previousDrugs.value    = drugs.value
 
       } else {
         alert(
@@ -217,9 +216,11 @@
    */
   const autoUpdateResults = async () : Promise<void> => {
     if (autoUpdate.value) {
+
       await loadData()
       await reportResults()
       await new Promise(resolve => setTimeout(resolve, 30000))
+
       autoUpdateResults()
     }
   }
@@ -236,6 +237,118 @@
     showForm.value = !showForm.value
   }
 
+/**
+ * @method checkManualDrugs
+ * 
+ * @description
+ *  Check if the manual drugs are valid
+ * 
+ * @returns {void}
+ */
+  const checkManualDrugs = () : void => {
+    if (manualDrugs.value) {
+      manualDrugs.value = cleanValue(manualDrugs.value)
+    } else {
+      manualDrugs.value = ''
+    }
+  }
+
+  /**
+   * @method isValidPatient
+   *
+   * @description
+   *  Check if the patient is valid
+   *
+   * @param {string} patient
+   *  The patient to check
+   *
+   * @returns {boolean}
+   *  True if the patient is valid, false otherwise
+   */
+  const isValidPatient = (patient: string) : boolean => {
+
+    return patientBase.includes(patient)
+  }
+
+  /**
+   * @method isValidDrug
+   *
+   * @description
+   *  Check if the drug is valid
+   *
+   * @param {string} drug
+   *  The drug to check
+   *
+   * @returns {boolean}
+   *  True if the drug is valid, false otherwise
+   */
+  const isValidDrug = (drug: string) : boolean => {
+
+    return drugBase.includes(drug)
+  }
+
+  /**
+   * @method isValidData
+   *
+   * @description
+   *  Check if the data is valid
+   *
+   * @returns {boolean}
+   *  True if the data is valid, false otherwise
+   */
+  const isValidData = () : boolean => {
+    const patientsArray: string[] = manualPatients.value.split(',')
+    const drugsArray: string[]    = manualDrugs.value.split(',')
+
+    if (!patientsArray.every(isValidPatient)) {
+      alert('Error: one or more patients are invalid.')
+
+      return false
+    }
+
+    if (!drugsArray.every(isValidDrug)) {
+      alert('Error: one or more drugs are invalid.')
+
+      return false
+    }
+
+    return true
+  }
+
+  /**
+   * @method validManualInput
+   *
+   * @description
+   *  Validate the manual input
+   *
+   * @returns {Promise<void>}
+   */
+  const validManualInput = async (): Promise<void> => {
+    patients.value = formatPatientsData(manualPatients.value)
+    drugs.value    = manualDrugs.value
+
+    await reportResults()
+  }
+
+  /**
+   * @method checkSameManualInput
+   *
+   * @description
+   *  Check if the manual input is the same as the previous one
+   *
+   * @returns {void}
+   */
+  const checkSameManualInput = () : void => {
+    const formatPreviousPatients: string = JSON.stringify(previousPatients.value)
+    const formatManualPatients: string   = JSON.stringify(formatPatientsData(manualPatients.value))
+
+    const isSamePatients: boolean = formatPreviousPatients === formatManualPatients
+    const isSameDrugs: boolean    = previousDrugs.value === manualDrugs.value
+
+    if (!isSamePatients || !isSameDrugs) validManualInput()
+    else alert('Patients & drugs are the same: please type new data.')
+  }
+
   /**
    * @method handleSubmitManualInput
    *
@@ -245,15 +358,17 @@
    * @returns {Promise<void>}
    */
   const handleManualInput = async () : Promise<void> => {
-    // TODO: add checking for different datasets
-    // TODO: add checking for invalid inputs
-    manualPatients.value = cleanValue(manualPatients.value)
-    manualDrugs.value    = cleanValue(manualDrugs.value)
 
-    patients.value     = formatPatientsData(manualPatients.value)
-    currentDrugs.value = manualDrugs.value
+    if (manualPatients.value) {
+      manualPatients.value = cleanValue(manualPatients.value)
 
-    await reportResults()
+      checkManualDrugs()
+
+      if (isValidData()) checkSameManualInput()
+
+    } else {
+      alert('Error: please type patients.')
+    }
   }
 </script>
 
