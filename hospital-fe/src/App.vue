@@ -4,8 +4,26 @@
   // TODO: import the Quarantine class from the package
   import { Quarantine } from 'hospital-lib/src/quarantine'
   import { Result } from './assets/Result'
-  import { patientBase, initPatientBase, drugBase } from './assets/data'
-  import { cleanValue, getData, truncateData } from './assets/services'
+
+  import {
+    EMPTY_INPUT_PATIENTS,
+    INVALID_DRUGS,
+    INVALID_PATIENTS,
+    SAME_INPUT_DATA,
+    SAME_LOADED_DATA,
+    UNDEFINED_DATA,
+    drugBase,
+    initPatientBase,
+    patientBase
+  } from './assets/data'
+
+  import {
+    sanitizeInput,
+    cleanValue,
+    getData,
+    isIncluded,
+    truncateData
+  } from './assets/services'
 
   import Title from './components/atoms/Title.vue'
   import Button from './components/atoms/Button.vue'
@@ -181,15 +199,11 @@
         previousDrugs.value    = drugs.value
 
       } else {
-        alert(
-          'Patients & drugs are the same: please load new data.'
-        )
+        alert(SAME_LOADED_DATA)
       }
 
     } else {
-      alert(
-        'Patients data is undefined, cannot create Quarantine.'
-      )
+      alert(UNDEFINED_DATA)
     }
   }
 
@@ -237,56 +251,6 @@
     showForm.value = !showForm.value
   }
 
-/**
- * @method checkManualDrugs
- * 
- * @description
- *  Check if the manual drugs are valid
- * 
- * @returns {void}
- */
-  const checkManualDrugs = () : void => {
-    if (manualDrugs.value) {
-      manualDrugs.value = cleanValue(manualDrugs.value)
-    } else {
-      manualDrugs.value = ''
-    }
-  }
-
-  /**
-   * @method isValidPatient
-   *
-   * @description
-   *  Check if the patient is valid
-   *
-   * @param {string} patient
-   *  The patient to check
-   *
-   * @returns {boolean}
-   *  True if the patient is valid, false otherwise
-   */
-  const isValidPatient = (patient: string) : boolean => {
-
-    return patientBase.includes(patient)
-  }
-
-  /**
-   * @method isValidDrug
-   *
-   * @description
-   *  Check if the drug is valid
-   *
-   * @param {string} drug
-   *  The drug to check
-   *
-   * @returns {boolean}
-   *  True if the drug is valid, false otherwise
-   */
-  const isValidDrug = (drug: string) : boolean => {
-
-    return drugBase.includes(drug)
-  }
-
   /**
    * @method isValidData
    *
@@ -300,14 +264,14 @@
     const patientsArray: string[] = manualPatients.value.split(',')
     const drugsArray: string[]    = manualDrugs.value.split(',')
 
-    if (!patientsArray.every(isValidPatient)) {
-      alert('Error: one or more patients are invalid.')
+    if (!patientsArray.every(patient => isIncluded(patient, patientBase))) {
+      alert(INVALID_PATIENTS)
 
       return false
     }
 
-    if (!drugsArray.every(isValidDrug)) {
-      alert('Error: one or more drugs are invalid.')
+    if (!drugsArray.every(drug => isIncluded(drug, drugBase))) {
+      alert(INVALID_DRUGS)
 
       return false
     }
@@ -346,7 +310,7 @@
     const isSameDrugs: boolean    = previousDrugs.value === manualDrugs.value
 
     if (!isSamePatients || !isSameDrugs) validManualInput()
-    else alert('Patients & drugs are the same: please type new data.')
+    else alert(SAME_INPUT_DATA)
   }
 
   /**
@@ -361,13 +325,12 @@
 
     if (manualPatients.value) {
       manualPatients.value = cleanValue(manualPatients.value)
-
-      checkManualDrugs()
+      manualDrugs.value    = sanitizeInput(manualDrugs.value)
 
       if (isValidData()) checkSameManualInput()
 
     } else {
-      alert('Error: please type patients.')
+      alert(EMPTY_INPUT_PATIENTS)
     }
   }
 </script>
