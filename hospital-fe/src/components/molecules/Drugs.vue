@@ -4,10 +4,10 @@
   defineProps<{drugs: string | undefined}>()
 
   /**
-   * @method getDrugsLoaded
+   * @method getDrugsText
    *
    * @description
-   *  Get the drugs loaded
+   *  Get the drugs loaded & return a text representation
    *
    * @param {string | undefined} drugs
    *  The drugs to get
