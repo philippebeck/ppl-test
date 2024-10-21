@@ -143,6 +143,8 @@
 
     if (drugs.value) {
       drugsList.value.push(drugs.value.slice())
+    } else {
+      drugsList.value.push('')
     }
   }
 
