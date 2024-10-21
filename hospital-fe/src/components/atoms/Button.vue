@@ -1,5 +1,6 @@
 <script setup lang="ts">
   defineProps<{
+    class?: string,
     icon: string,
     label: string,
     action: () => void
@@ -8,7 +9,9 @@
 
 <template>
   <button
-    @click="action">
+    :class="class"
+    @click="action"
+  >
     <i
       :class="icon"
       aria-hidden="true"
@@ -23,15 +26,15 @@
     display: inline-block;
     margin: var(--md);
     border-radius: 50px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     padding: 0.6em 1.2em;
-    width: 220px;
+    width: 225px;
     font-size: 1.2rem;
     font-family: var(--monospace);
     background-color: var(--light);
     color: var(--dark);
     cursor: pointer;
-    transition: color 500ms;
+    transition: all 500ms;
 
     i {
       font-size: 1.5rem;
@@ -44,8 +47,11 @@
 
     &:hover,
     &:focus,
-    .active {
-      color: var(--primary);
+    &.active {
+      border-color: var(--light);
+      background-color: var(--primary);
+      color: var(--light);
+      transform: scale(0.95);
     }
   }
 </style>
