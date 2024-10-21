@@ -6,6 +6,7 @@ import {
   INVALID_DRUGS,
   INVALID_PATIENTS,
   drugBase,
+  initPatientBase,
   patientBase
 } from './data'
 
@@ -27,7 +28,32 @@ export const cleanValue = (value: string) : string => {
 }
 
 /**
- * @function formatResult
+ * @function formatPatients
+ *
+ * @description
+ *  Parses a string of patient states & counts occurrences of each state
+ *
+ * @param {string | undefined} patients
+ *  A comma-separated string representing patient states
+ *
+ * @returns {Object}
+ *  An object with the counts of each state, initialized with default values
+ */
+export const formatPatients = (patients: string | undefined): PatientsRegister | undefined => {
+
+  return patients
+    ?.split(',')
+    .reduce((acc: PatientsRegister, current: string) => {
+      const defaultState: PatientsRegister = initPatientBase
+      acc = { ...defaultState, ...acc }
+      acc[current] = (acc[current] || 0) + 1
+
+      return acc
+    }, {})
+}
+
+/**
+ * @function formatResults
  *
  * @description
  *  Format the results of a quarantine simulation
@@ -44,7 +70,7 @@ export const cleanValue = (value: string) : string => {
  *  which are the counts of the state in the input
  *  and output states, respectively
  */
-export const formatResult = (
+export const formatResults = (
   input: PatientsRegister,
   output: PatientsRegister
 ) : Result => {
