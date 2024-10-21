@@ -92,6 +92,44 @@ export const isIncluded = (string: string, array: string[]) : boolean => {
 }
 
 /**
+ * @method isValidData
+ *
+ * @description
+ *  Check if the data is valid
+ *
+ * @param {string} patients
+ *  The patients data
+ *
+ * @param {string} drugs
+ *  The drugs data
+ *
+ * @returns {boolean}
+ *  True if the data is valid, false otherwise
+ */
+export const isValidData = (
+  patients: string,
+  drugs: string
+): boolean => {
+
+  const patientsArray: string[] = patients.split(',')
+  const drugsArray: string[]    = drugs.split(',')
+
+  if (!patientsArray.every(patient => isIncluded(patient, patientBase))) {
+    alert(INVALID_PATIENTS)
+
+    return false
+  }
+
+  if (!drugsArray.every(drug => isIncluded(drug, drugBase))) {
+    alert(INVALID_DRUGS)
+
+    return false
+  }
+
+  return true
+}
+
+/**
  * @function truncateData
  *
  * @description
