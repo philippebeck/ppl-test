@@ -1,25 +1,13 @@
 import axios from 'axios'
+import { PatientsRegister } from 'hospital-lib'
 import { Result } from './Result'
 
-/**
- * @method sanitizeInput
- * 
- * @description
- *  Check if the input value is valid
- *
- * @param {string} input
- *  The input to check
- *
- * @returns {string}
- *  The sanitized input
- */
-export const sanitizeInput = (input: string): string => {
-
-  if (input) input = cleanValue(input)
-  else input = ''
-
-  return input
-}
+import {
+  INVALID_DRUGS,
+  INVALID_PATIENTS,
+  drugBase,
+  patientBase
+} from './data'
 
 /**
  * @function cleanValue
@@ -36,6 +24,41 @@ export const sanitizeInput = (input: string): string => {
 export const cleanValue = (value: string) : string => {
 
   return value.trim().replace(/\s*,\s*/g, ',')
+}
+
+/**
+ * @method formatResult
+ *
+ * @description
+ *  Format the results of a quarantine simulation
+ *
+ * @param {PatientsRegister} input
+ *  The input states of the patients
+ *
+ * @param {PatientsRegister} output
+ *  The output states of the patients
+ *
+ * @returns {Result}
+ *  An object with each key being a patient state
+ *  and each value being an object with input & output properties,
+ *  which are the counts of the state in the input
+ *  and output states, respectively
+ */
+export const formatResult = (
+  input: PatientsRegister,
+  output: PatientsRegister
+) : Result => {
+
+  return Object
+    .keys(input)
+    .reduce((acc: Result, key: string) => {
+      acc[key] = {
+        input: input[key],
+        output: output[key]
+      }
+
+      return acc
+    }, {})
 }
 
 /**
@@ -86,7 +109,10 @@ export const getData = async (
  * @returns {boolean}
  *  True if the string is included in the array, false otherwise
  */
-export const isIncluded = (string: string, array: string[]) : boolean => {
+export const isIncluded = (
+  string: string,
+  array: string[]
+) : boolean => {
 
   return array.includes(string)
 }
@@ -130,16 +156,36 @@ export const isValidData = (
 }
 
 /**
+ * @method sanitizeInput
+ * 
+ * @description
+ *  Check if the input value is valid
+ *
+ * @param {string} input
+ *  The input to check
+ *
+ * @returns {string}
+ *  The sanitized input
+ */
+export const sanitizeInput = (input: string): string => {
+
+  if (input) input = cleanValue(input)
+  else input = ''
+
+  return input
+}
+
+/**
  * @function truncateData
  *
  * @description
  *  Truncate the data to the given length
  *
- * @param {Result[]} primary
- *  The primary data to truncate
+ * @param {Result[]} result
+ *  The result data to truncate
  *
- * @param {string[]} secondary
- *  The secondary data to truncate
+ * @param {string[]} array
+ *  The array data to truncate
  *  @default []
  *
  * @param {number} length
@@ -156,6 +202,4 @@ export const truncateData = (
 
   if (result.length > length) result.shift()
   if (array.length > 0 && array.length > length) array.shift()
-}
-
 }
