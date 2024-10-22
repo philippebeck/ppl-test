@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import swal from 'sweetalert'
-  import { PatientsRegister } from 'hospital-lib'
-  import { Quarantine } from 'hospital-lib/src/quarantine'
+  import { PatientsRegister, Quarantine } from 'hospital-lib'
   import { Result } from './assets/Result'
 
   import {
