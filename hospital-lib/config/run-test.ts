@@ -3,7 +3,7 @@ import {TestRunner, TestSet} from 'alsatian';
 
 (async () => {
   const testSet = TestSet.create();
-  testSet.addTestsFromFiles('./src/**/*.spec.ts');
+  testSet.addTestsFromFiles('./src/*.spec.ts');
 
   const testRunner = new TestRunner();
 
