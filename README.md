@@ -139,3 +139,4 @@ yarn start
 - **lib-test** => the test branch of the library with an additional patient state, an additional drug & new tests for them  
 - **fe-ext** => the extension branch of the frontend with 2 additional features *(auto refresh & manual input)*  
 - **refacto** => the refactoring branch of the frontend with 1 additional package *(sweet alert)*  
+- **lib-vite** => the vite version of the library, to fix import of Quarantine in the frontend (App), but the lib tests can't be runned on this branch for the moment, a TypeError: unknown file extension ".ts" is raised  
